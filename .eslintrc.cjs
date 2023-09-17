@@ -10,7 +10,7 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', 'prettier'],
+  plugins: ['react-refresh', 'prettier', 'no-relative-import-paths'],
   rules: {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     'prettier/prettier': [
@@ -23,9 +23,13 @@ module.exports = {
         endOfLine: 'auto',
         useTabs: false,
         singleQuote: true,
-        printWidth: 120,
+        printWidth: 100,
         jsxSingleQuote: true,
       },
+    ],
+    'no-relative-import-paths/no-relative-import-paths': [
+      'warn',
+      { allowSameFolder: false, rootDir: 'src', prefix: '@' },
     ],
   },
 }
