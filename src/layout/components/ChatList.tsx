@@ -13,11 +13,12 @@ const defaulPagination = {
 
 export const ChatList = () => {
   const [pagination] = useState<ChatSectionRequest>(defaulPagination)
-  const { data } = useChatSections(pagination)
+  const { data, refetch } = useChatSections(pagination)
   const { mutate } = useUpdateChatSectionName()
 
   const onChatTitleChange = (idchat_section: number) => (name: string) => {
     mutate({ idchat_section, name })
+    refetch()
   }
 
   const onRemoveChat = useCallback(() => {}, [])
