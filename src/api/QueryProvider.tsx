@@ -11,4 +11,4 @@ const QueryProvider = ({ children }: QueryProviderProps) => {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 }
 
-export default QueryProvider
+export { QueryProvider as default, queryClient }

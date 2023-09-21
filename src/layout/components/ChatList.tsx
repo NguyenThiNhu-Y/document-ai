@@ -1,42 +1,45 @@
 import styled from '@emotion/styled'
-import { Flex } from '@radix-ui/themes'
+import { Box, Flex } from '@radix-ui/themes'
 import EditAbleNavLink from '@/layout/components/EditAbleNavLink'
-import { useCallback, useState } from 'react'
-import { ChatSectionRequest } from '@/api/chatAPI/chatAPI.types'
+import { useCallback, useEffect } from 'react'
 import { useChatSections, useUpdateChatSectionName } from '@/api/chatAPI/chatAPI.hooks'
-
-const defaulPagination = {
-  iduser: 1,
-  page_size: 10,
-  current_page: 1,
-}
+import { useInView } from 'react-intersection-observer'
 
 export const ChatList = () => {
-  const [pagination] = useState<ChatSectionRequest>(defaulPagination)
-  const { data, refetch } = useChatSections(pagination)
-  const { mutate } = useUpdateChatSectionName()
+  const { data, hasNextPage, fetchNextPage } = useChatSections()
+  const { mutate, isLoading } = useUpdateChatSectionName()
+  const { ref, inView } = useInView()
 
   const onChatTitleChange = (idchat_section: number) => (name: string) => {
     mutate({ idchat_section, name })
-    refetch()
   }
 
   const onRemoveChat = useCallback(() => {}, [])
 
-  console.log(data?.chat_sections)
+  useEffect(() => {
+    inView && hasNextPage && fetchNextPage()
+  }, [fetchNextPage, hasNextPage, inView])
 
   return (
     <FlexStyled direction={'column'} gap={'1'} ml={'4'} pl={'3'}>
-      {data?.chat_sections?.map((chatSection) => (
-        <EditAbleNavLink
-          to={`/chat/${chatSection.idchat_section}`}
-          key={chatSection.idchat_section}
-          onUpdate={onChatTitleChange(chatSection.idchat_section)}
-          onRemove={onRemoveChat}
-        >
-          {chatSection.name}
-        </EditAbleNavLink>
-      ))}
+      {data?.pages.map((page) =>
+        page.chat_sections.map((chatSection, i) => (
+          <Box
+            ref={page.chat_sections.length === i + 1 ? ref : undefined}
+            key={chatSection.idchat_section}
+          >
+            <EditAbleNavLink
+              to={`/chat/${chatSection.idchat_section}`}
+              onUpdate={onChatTitleChange(chatSection.idchat_section)}
+              onRemove={onRemoveChat}
+              className='chat-section'
+              isUpdating={isLoading}
+            >
+              {chatSection.name}
+            </EditAbleNavLink>
+          </Box>
+        ))
+      )}
     </FlexStyled>
   )
 }

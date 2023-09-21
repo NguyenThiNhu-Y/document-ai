@@ -38,8 +38,9 @@ const NavLink = styled(NavLinkComponent)(
       '&:active:not(:has(:active))': {
         backgroundColor: colors.iris5,
       },
-      '&:has(:focus)': {
+      '&.chat-section:has(:focus)': {
         boxShadow: 'inset 0 0 0 1px var(--accent-8),0 0 0 1px var(--accent-a8)',
+        backgroundColor: colors.gray1,
       },
     }
   }

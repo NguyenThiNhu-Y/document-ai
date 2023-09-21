@@ -1,8 +1,10 @@
 import { EDIT_ABLE_MODE } from '@/constants/common.enum'
 import NavLink from '@/layout/components/NavLink'
+import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { CheckIcon, Cross2Icon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Flex, IconButton } from '@radix-ui/themes'
+import { Ring } from '@uiball/loaders'
 import {
   ComponentProps,
   forwardRef,
@@ -19,6 +21,7 @@ interface EditAbleNavLinkProps extends NavLinkProps {
   onUpdate: (name: string) => void
   onRemove: () => void
   children: string
+  isUpdating: boolean
 }
 
 interface EditInputProps {
@@ -32,12 +35,14 @@ interface EditReadOnlyViewProps {
   onEditOn: (e: MouseEvent<HTMLButtonElement>) => void
   onRemove: (e: MouseEvent<HTMLButtonElement>) => void
   text: string
+  isUpdating: boolean
 }
 
 const EditAbleNavLink = ({
   onUpdate,
   onRemove,
   children: text,
+  isUpdating,
   ...props
 }: EditAbleNavLinkProps) => {
   const [mode, setMode] = useState(EDIT_ABLE_MODE.OFF)
@@ -76,6 +81,7 @@ const EditAbleNavLink = ({
         ref={inputRef}
         defaultValue={text}
         text={inputRef.current?.value ?? text}
+        isUpdating={isUpdating}
         onBlur={onBlur}
         onUpdate={handleSubmit}
         onEditOn={onEditOn}
@@ -110,22 +116,31 @@ const EditInput = forwardRef<HTMLInputElement, EditInputProps>(
   }
 )
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const EditReadOnlyView = forwardRef(({ onEditOn, onRemove, text }: EditReadOnlyViewProps, _ref) => {
-  return (
-    <>
-      {text}
-      <Flex ml={'auto'} gap={'2'} className='chat-action-buttons'>
-        <IconButton size={'1'} variant='ghost' onClick={onEditOn}>
-          <Pencil1Icon />
-        </IconButton>
-        <IconButton size={'1'} variant='ghost' onClick={onRemove}>
-          <TrashIcon />
-        </IconButton>
-      </Flex>
-    </>
-  )
-})
+const EditReadOnlyView = forwardRef(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ({ onEditOn, onRemove, text, isUpdating }: EditReadOnlyViewProps, _ref) => {
+    const { colors } = useTheme()
+    return (
+      <>
+        {text}
+        <Flex ml={'auto'} gap={'2'} className={isUpdating ? '' : 'chat-action-buttons'}>
+          {isUpdating ? (
+            <Ring size={14} color={colors.iris12} />
+          ) : (
+            <>
+              <IconButton size={'1'} variant='ghost' onClick={onEditOn}>
+                <Pencil1Icon />
+              </IconButton>
+              <IconButton size={'1'} variant='ghost' onClick={onRemove}>
+                <TrashIcon />
+              </IconButton>
+            </>
+          )}
+        </Flex>
+      </>
+    )
+  }
+)
 
 const TextInput = styled.input({
   fontWeight: 500,

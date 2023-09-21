@@ -1,7 +1,14 @@
-import { Flex } from '@radix-ui/themes'
+import { Container } from '@radix-ui/themes'
+import DocumentsHeader from '@documentComponents/DocumentsHeader'
+import DocumentList from '@documentComponents/DocumentList'
 
 const Documents = () => {
-  return <Flex>1</Flex>
+  return (
+    <Container size='3' pt={'9'}>
+      <DocumentsHeader />
+      <DocumentList />
+    </Container>
+  )
 }
 
 export default Documents

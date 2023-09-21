@@ -12,7 +12,7 @@ const SideBar = () => {
   }
 
   return (
-    <GridStyled rows={'auto 1fr auto'} columns={'1'} position={'sticky'}>
+    <GridStyled rows={'auto 1fr auto'} columns={'1'} position={'sticky'} top={'0'}>
       <Box px={'4'} py='5'>
         <Heading size={'3'}>Document AI</Heading>
       </Box>
@@ -40,6 +40,7 @@ const SideBar = () => {
 const GridStyled = styled(Grid)((props) => ({
   borderRight: `1px solid ${props.theme.colors.gray5}`,
   height: '100vh',
+  backgroundColor: props.theme.colors.gray2,
 }))
 
 export default SideBar

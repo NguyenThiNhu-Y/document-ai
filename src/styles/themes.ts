@@ -1,5 +1,16 @@
 import { css } from '@emotion/react'
-import { gray, grayDark, iris, irisDark, slate, slateDark } from '@radix-ui/colors'
+import {
+  gray,
+  grayDark,
+  iris,
+  irisDark,
+  slate,
+  slateDark,
+  red,
+  redDark,
+  blue,
+  blueDark,
+} from '@radix-ui/colors'
 
 export const globalStyle = css({
   body: {
@@ -21,6 +32,8 @@ export const lightTheme = {
     ...slate,
     ...gray,
     ...iris,
+    ...red,
+    ...blue,
   },
 }
 
@@ -29,5 +42,7 @@ export const darkTheme = {
     ...slateDark,
     ...grayDark,
     ...irisDark,
+    ...redDark,
+    ...blueDark,
   },
 }

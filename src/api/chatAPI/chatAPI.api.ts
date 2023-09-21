@@ -4,9 +4,10 @@ import {
   ChatSectionResponse,
   EditChatSectionNameRequest,
 } from '@/api/chatAPI/chatAPI.types'
+import { GenericAbortSignal } from 'axios'
 
-export const getChatSections = async (params: ChatSectionRequest) => {
-  const result: ChatSectionResponse = await axios.get('/get_chat_section', { params })
+export const getChatSections = async (params: ChatSectionRequest, signal?: GenericAbortSignal) => {
+  const result: ChatSectionResponse = await axios.get('/get_chat_section', { params, signal })
   return result
 }
 
