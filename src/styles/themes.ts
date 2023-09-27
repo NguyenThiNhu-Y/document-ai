@@ -10,6 +10,10 @@ import {
   redDark,
   blue,
   blueDark,
+  grayA,
+  grayDarkA,
+  irisA,
+  irisDarkA,
 } from '@radix-ui/colors'
 
 export const globalStyle = css({
@@ -34,6 +38,8 @@ export const lightTheme = {
     ...iris,
     ...red,
     ...blue,
+    ...grayA,
+    ...irisA,
   },
 }
 
@@ -44,5 +50,7 @@ export const darkTheme = {
     ...irisDark,
     ...redDark,
     ...blueDark,
+    ...grayDarkA,
+    ...irisDarkA,
   },
 }

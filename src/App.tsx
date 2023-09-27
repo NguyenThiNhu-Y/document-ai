@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from '@/layout/Layout'
 import Documents from '@/pages/documents/Documents'
+import ChatSection from '@/pages/chatSection/ChatSection'
 
 function App() {
   return (
@@ -8,7 +9,8 @@ function App() {
       <Route path='/' element={<Layout />}>
         <Route index element={<Navigate to='documents' />} />
         <Route path='documents' element={<Documents />} />
-        <Route path='chat/:chatID' />
+        <Route path='new-chat' element={<ChatSection />} />
+        <Route path='chat/:chatID' element={<ChatSection />} />
       </Route>
       <Route path='public'>
         <Route path='login' />

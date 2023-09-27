@@ -3,8 +3,13 @@ export enum EDIT_ABLE_MODE {
   OFF = 'OFF',
 }
 
-export const enum FILE_TYPES {
+export enum FILE_TYPES {
   PDF = 'PDF',
   DOC = 'DOC',
   DOCX = 'DOCX',
+}
+
+export enum INFINITE_ITEM_STATUS {
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
 }

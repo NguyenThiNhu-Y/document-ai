@@ -16,3 +16,37 @@ export interface ChatSectionRequest extends BasePaginationRequest {
 }
 
 export interface EditChatSectionNameRequest extends Pick<ChatSection, 'idchat_section' | 'name'> {}
+
+export interface Message {
+  idhistory_chat: number
+  question: string
+  answer: string
+  created_question: string
+  created_answer: string
+  iduser: number
+}
+
+export interface MessagesRequest extends BasePaginationRequest {
+  idchat_section: number
+}
+
+export interface MessagesResponse extends BasePaginationResponse {
+  message: Message[]
+}
+
+export interface NewChatRequest {
+  name: string
+  iduser: number
+  question: string
+}
+
+export interface NewChatRequestWithTmpChatId extends NewChatRequest {
+  idchat_section: number
+}
+
+export interface NewChatResponse extends ChatSection, Message {
+  question: string
+  answer: string
+  created_question: string
+  created_answer: string
+}

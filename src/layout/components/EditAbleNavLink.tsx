@@ -1,9 +1,10 @@
+import { useUpdateChatSectionName } from '@/api/chatAPI/chatAPI.hooks'
 import { EDIT_ABLE_MODE } from '@/constants/common.enum'
 import NavLink from '@/layout/components/NavLink'
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { CheckIcon, Cross2Icon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Flex, IconButton } from '@radix-ui/themes'
+import { Box, Flex, IconButton, Text } from '@radix-ui/themes'
 import { Ring } from '@uiball/loaders'
 import {
   ComponentProps,
@@ -12,20 +13,19 @@ import {
   useState,
   KeyboardEvent,
   MouseEvent,
-  FocusEvent,
+  useEffect,
+  memo,
 } from 'react'
 
 type NavLinkProps = ComponentProps<typeof NavLink>
 
 interface EditAbleNavLinkProps extends NavLinkProps {
-  onUpdate: (name: string) => void
   onRemove: () => void
   children: string
-  isUpdating: boolean
+  chatSectionID: number
 }
 
 interface EditInputProps {
-  onBlur: (e: FocusEvent<HTMLInputElement>) => void
   onUpdate: () => void
   onEnter: (e: KeyboardEvent<HTMLInputElement>) => void
   defaultValue: string
@@ -39,12 +39,12 @@ interface EditReadOnlyViewProps {
 }
 
 const EditAbleNavLink = ({
-  onUpdate,
   onRemove,
   children: text,
-  isUpdating,
+  chatSectionID,
   ...props
 }: EditAbleNavLinkProps) => {
+  const { mutate, isLoading } = useUpdateChatSectionName()
   const [mode, setMode] = useState(EDIT_ABLE_MODE.OFF)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -53,12 +53,6 @@ const EditAbleNavLink = ({
     [EDIT_ABLE_MODE.OFF]: EditReadOnlyView,
   }[mode]
 
-  const onBlur: EditInputProps['onBlur'] = (e) => {
-    if (inputRef.current) inputRef.current.value = text
-    setMode(EDIT_ABLE_MODE.OFF)
-    e.preventDefault()
-  }
-
   const onEditOn: EditReadOnlyViewProps['onEditOn'] = (e) => {
     setMode(EDIT_ABLE_MODE.ON)
     e.preventDefault()
@@ -66,14 +60,37 @@ const EditAbleNavLink = ({
 
   const onEnter: EditInputProps['onEnter'] = (e) => {
     if (e.key === 'Enter') {
-      setMode(EDIT_ABLE_MODE.OFF)
       handleSubmit()
     }
   }
 
   const handleSubmit = () => {
-    inputRef.current && onUpdate(inputRef.current.value)
+    const newChatTitle = inputRef.current?.value
+
+    setMode(EDIT_ABLE_MODE.OFF)
+    if (newChatTitle && newChatTitle !== text) {
+      mutate({ idchat_section: chatSectionID, name: newChatTitle })
+    }
   }
+
+  const isNode = (e: EventTarget | null): e is Node => {
+    return !!e && 'nodeType' in e
+  }
+
+  useEffect(() => {
+    const onMousedown = (e: globalThis.MouseEvent) => {
+      if (isNode(e.target) && !inputRef.current?.contains(e.target)) {
+        if (inputRef.current) inputRef.current.value = text
+        setMode(EDIT_ABLE_MODE.OFF)
+      }
+    }
+
+    window.addEventListener('mousedown', onMousedown)
+
+    return () => {
+      window.removeEventListener('mousedown', onMousedown)
+    }
+  }, [text])
 
   return (
     <NavLink {...props}>
@@ -81,8 +98,7 @@ const EditAbleNavLink = ({
         ref={inputRef}
         defaultValue={text}
         text={inputRef.current?.value ?? text}
-        isUpdating={isUpdating}
-        onBlur={onBlur}
+        isUpdating={isLoading}
         onUpdate={handleSubmit}
         onEditOn={onEditOn}
         onRemove={onRemove}
@@ -93,13 +109,13 @@ const EditAbleNavLink = ({
 }
 
 const EditInput = forwardRef<HTMLInputElement, EditInputProps>(
-  ({ onBlur, defaultValue, onUpdate, onEnter }, ref) => {
+  ({ defaultValue, onUpdate, onEnter }, ref) => {
     return (
       <>
         <TextInput
+          className='edit-input'
           ref={ref}
           defaultValue={defaultValue}
-          onBlur={onBlur}
           onKeyDown={onEnter}
           autoFocus
         />
@@ -122,8 +138,13 @@ const EditReadOnlyView = forwardRef(
     const { colors } = useTheme()
     return (
       <>
-        {text}
-        <Flex ml={'auto'} gap={'2'} className={isUpdating ? '' : 'chat-action-buttons'}>
+        <TextStyled>{text}</TextStyled>
+        <Box width={'6'} className='spacing' />
+        <ViewActionButtonBox
+          gap={'2'}
+          ml={'auto'}
+          className={isUpdating ? '' : 'chat-action-buttons'}
+        >
           {isUpdating ? (
             <Ring size={14} color={colors.iris12} />
           ) : (
@@ -136,7 +157,7 @@ const EditReadOnlyView = forwardRef(
               </IconButton>
             </>
           )}
-        </Flex>
+        </ViewActionButtonBox>
       </>
     )
   }
@@ -149,6 +170,7 @@ const TextInput = styled.input({
   width: '100%',
   backgroundColor: 'transparent',
   paddingBottom: '1px',
+  border: 'none',
 
   '&:focus': {
     outline: 'none',
@@ -156,4 +178,19 @@ const TextInput = styled.input({
   },
 })
 
-export default EditAbleNavLink
+const TextStyled = styled(Text)({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  display: 'inline-block',
+  flex: 1,
+})
+
+const ViewActionButtonBox = styled(Flex)({
+  position: 'absolute',
+  right: '8px',
+})
+
+const MemoEditAbleNavLink = memo(EditAbleNavLink)
+
+export default MemoEditAbleNavLink

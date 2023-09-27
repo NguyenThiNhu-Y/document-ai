@@ -1,49 +1,102 @@
 import styled from '@emotion/styled'
-import { Box, Flex } from '@radix-ui/themes'
 import EditAbleNavLink from '@/layout/components/EditAbleNavLink'
-import { useCallback, useEffect } from 'react'
-import { useChatSections, useUpdateChatSectionName } from '@/api/chatAPI/chatAPI.hooks'
-import { useInView } from 'react-intersection-observer'
+import { useCallback, useMemo } from 'react'
+import { useChatSections } from '@/api/chatAPI/chatAPI.hooks'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList } from 'react-window'
+import InfiniteLoader from 'react-window-infinite-loader'
+import Skeleton from 'react-loading-skeleton'
+import { Flex } from '@radix-ui/themes'
+import { Ring } from '@uiball/loaders'
+import { useTheme } from '@emotion/react'
 
 export const ChatList = () => {
-  const { data, hasNextPage, fetchNextPage } = useChatSections()
-  const { mutate, isLoading } = useUpdateChatSectionName()
-  const { ref, inView } = useInView()
+  const { data, hasNextPage, fetchNextPage, isFetching, isFetchingNextPage } = useChatSections()
+  const { colors } = useTheme()
 
-  const onChatTitleChange = (idchat_section: number) => (name: string) => {
-    mutate({ idchat_section, name })
-  }
+  const chatSections = useMemo(
+    () => data?.pages.flatMap((page) => page.chat_sections) ?? [],
+    [data]
+  )
+
+  const itemCount = hasNextPage ? chatSections.length + 1 : chatSections.length
 
   const onRemoveChat = useCallback(() => {}, [])
 
-  useEffect(() => {
-    inView && hasNextPage && fetchNextPage()
-  }, [fetchNextPage, hasNextPage, inView])
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleLoadMore = async (_: number, __: number) => {
+    if (!isFetchingNextPage) await fetchNextPage()
+  }
+
+  const CheckItemLoaded = (index: number) => !hasNextPage || index < chatSections.length
+
+  if (isFetching && !itemCount)
+    return (
+      <Flex justify={'center'} height={'9'}>
+        <Ring size={20} lineWeight={2} speed={2} color={colors.slate12} />
+      </Flex>
+    )
 
   return (
-    <FlexStyled direction={'column'} gap={'1'} ml={'4'} pl={'3'}>
-      {data?.pages.map((page) =>
-        page.chat_sections.map((chatSection, i) => (
-          <Box
-            ref={page.chat_sections.length === i + 1 ? ref : undefined}
-            key={chatSection.idchat_section}
-          >
-            <EditAbleNavLink
-              to={`/chat/${chatSection.idchat_section}`}
-              onUpdate={onChatTitleChange(chatSection.idchat_section)}
-              onRemove={onRemoveChat}
-              className='chat-section'
-              isUpdating={isLoading}
+    <AutoSizer>
+      {({ width, height }) => (
+        <InfiniteLoader
+          isItemLoaded={CheckItemLoaded}
+          itemCount={itemCount}
+          loadMoreItems={handleLoadMore}
+        >
+          {({ onItemsRendered, ref }) => (
+            <FixedSizeListStyled
+              width={width}
+              height={height}
+              itemSize={36}
+              itemCount={itemCount}
+              onItemsRendered={onItemsRendered}
+              ref={ref}
             >
-              {chatSection.name}
-            </EditAbleNavLink>
-          </Box>
-        ))
+              {(props) => (
+                <RowItem style={props.style}>
+                  {CheckItemLoaded(props.index) ? (
+                    <EditAbleNavLink
+                      to={`/chat/${chatSections[props.index].idchat_section}`}
+                      onRemove={onRemoveChat}
+                      className='chat-section'
+                      key={chatSections[props.index].idchat_section}
+                      chatSectionID={chatSections[props.index].idchat_section}
+                    >
+                      {chatSections[props.index]?.name}
+                    </EditAbleNavLink>
+                  ) : (
+                    <Skeleton height={32} baseColor={colors.slate4} />
+                  )}
+                </RowItem>
+              )}
+            </FixedSizeListStyled>
+          )}
+        </InfiniteLoader>
       )}
-    </FlexStyled>
+    </AutoSizer>
   )
 }
 
-const FlexStyled = styled(Flex)((props) => ({
+const FixedSizeListStyled = styled(FixedSizeList)((props) => ({
   borderLeft: `1px solid ${props.theme.colors.gray5}`,
+
+  '&::-webkit-scrollbar': {
+    width: '4px',
+  },
+
+  '&::-webkit-scrollbar-track': {
+    backgroundColor: props.theme.colors.grayA3,
+    borderRadius: 999,
+  },
+
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: props.theme.colors.grayA8,
+    borderRadius: 999,
+  },
 }))
+
+const RowItem = styled.div({
+  padding: '2px 4px',
+})

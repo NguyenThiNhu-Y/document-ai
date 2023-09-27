@@ -14,13 +14,22 @@ const NavLink = styled(NavLinkComponent)(
     fontWeight: 500,
     width: '100%',
     height: '32px',
+    position: 'relative',
 
     '.chat-action-buttons': {
       display: 'none',
     },
 
-    '&:hover .chat-action-buttons': {
+    '.spacing': {
+      display: 'none',
+    },
+
+    '&.active .chat-action-buttons': {
       display: 'flex',
+    },
+
+    '&.active .spacing': {
+      display: 'block',
     },
   },
   (props) => {
@@ -35,10 +44,10 @@ const NavLink = styled(NavLinkComponent)(
       '&:hover': {
         backgroundColor: colors.iris3,
       },
-      '&:active:not(:has(:active))': {
+      '&:active': {
         backgroundColor: colors.iris5,
       },
-      '&.chat-section:has(:focus)': {
+      '&.chat-section:has(.edit-input:focus)': {
         boxShadow: 'inset 0 0 0 1px var(--accent-8),0 0 0 1px var(--accent-a8)',
         backgroundColor: colors.gray1,
       },

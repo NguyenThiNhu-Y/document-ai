@@ -3,12 +3,13 @@ import Line from '@/components/Line'
 import { FILE_TYPES } from '@/constants/common.enum'
 import { formatDateTime } from '@/utils/datetime'
 import styled from '@emotion/styled'
-import { Card, Flex, Text } from '@radix-ui/themes'
+import { Card, DropdownMenu, Flex, IconButton, Text } from '@radix-ui/themes'
 import prettyBytes from 'pretty-bytes'
 import { forwardRef, ForwardedRef, useMemo } from 'react'
 import { BiTimeFive } from 'react-icons/bi'
 import { useTheme } from '@emotion/react'
 import { FILE_ICONS } from '@/constants/common'
+import { DotsVerticalIcon } from '@radix-ui/react-icons'
 
 interface DocumentItemProps extends Document {}
 
@@ -26,7 +27,7 @@ const DocumentItem = forwardRef(
     }[fileType]
 
     return (
-      <Card>
+      <CardStyled>
         <Flex ref={ref} direction={'column'}>
           <Flex direction={'column'} justify={'center'} align={'center'} gap={'4'} mt={'4'}>
             <FileIcon size={72} color={fileColor} />
@@ -46,20 +47,41 @@ const DocumentItem = forwardRef(
             </Flex>
           </Flex>
         </Flex>
-      </Card>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <MenuButton color='gray' variant={'ghost'}>
+              <DotsVerticalIcon />
+            </MenuButton>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content size={'2'}>
+            <DropdownMenu.Item>Tóm tắt nội dung</DropdownMenu.Item>
+            <DropdownMenu.Item>Xóa tài liệu</DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </CardStyled>
     )
   }
 )
 
-export const TextDark = styled(Text)((props) => ({
+const CardStyled = styled(Card)({
+  position: 'relative',
+})
+
+const MenuButton = styled(IconButton)({
+  position: 'absolute',
+  top: '12px',
+  right: '12px',
+})
+
+const TextDark = styled(Text)((props) => ({
   color: props.theme.colors.gray8,
 }))
 
-export const BiTimeFiveDark = styled(BiTimeFive)((props) => ({
+const BiTimeFiveDark = styled(BiTimeFive)((props) => ({
   color: props.theme.colors.gray8,
 }))
 
-export const FileNameMask = styled(Text)({
+const FileNameMask = styled(Text)({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   display: '-webkit-box',

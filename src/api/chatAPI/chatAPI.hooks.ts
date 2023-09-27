@@ -1,10 +1,19 @@
 import { InfiniteData, useInfiniteQuery, useMutation } from '@tanstack/react-query'
-import { editChatSectionName, getChatSections } from '@/api/chatAPI/chatAPI.api'
+import {
+  createChatSection,
+  editChatSectionName,
+  getChatMessages,
+  getChatSections,
+} from '@/api/chatAPI/chatAPI.api'
 import { QUERY_KEYS } from '@/api/common.enums'
 import { DEFAULT_PAGINATION } from '@/constants/common'
 import { PAGE_LIMIT } from '@/api/common.constants'
 import { queryClient } from '@/api/QueryProvider'
-import { ChatSectionResponse } from '@/api/chatAPI/chatAPI.types'
+import {
+  ChatSectionResponse,
+  MessagesResponse,
+  NewChatRequestWithTmpChatId,
+} from '@/api/chatAPI/chatAPI.types'
 
 export const useChatSections = () => {
   return useInfiniteQuery({
@@ -28,7 +37,9 @@ export const useUpdateChatSectionName = () => {
       await queryClient.cancelQueries({ queryKey: [QUERY_KEYS.INFINITE_CHAT_SECTIONS] })
 
       // Snapshot the previous value
-      const previousChatSections = queryClient.getQueryData([QUERY_KEYS.INFINITE_CHAT_SECTIONS])
+      const previousChatSections = queryClient.getQueryData<InfiniteData<ChatSectionResponse>>([
+        QUERY_KEYS.INFINITE_CHAT_SECTIONS,
+      ])
 
       // Optimistically update to the new value
       queryClient.setQueryData<InfiniteData<ChatSectionResponse>>(
@@ -56,12 +67,107 @@ export const useUpdateChatSectionName = () => {
     onError: (err, newTodo, context) => {
       queryClient.setQueryData<InfiniteData<ChatSectionResponse>>(
         [QUERY_KEYS.INFINITE_CHAT_SECTIONS],
-        (old) =>
-          context ? (context.previousChatSections as InfiniteData<ChatSectionResponse>) : old
+        (old) => (context ? context.previousChatSections : old)
       )
     },
 
     // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INFINITE_CHAT_SECTIONS] })
+    },
+  })
+}
+
+export const useMessages = (idChat: number) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.INFINITE_MESSAGES, idChat],
+
+    queryFn: ({ pageParam = 1 }) =>
+      getChatMessages({
+        ...DEFAULT_PAGINATION,
+        current_page: pageParam,
+        idchat_section: idChat,
+      }),
+
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.message?.length === PAGE_LIMIT ? allPages.length + 1 : undefined
+    },
+  })
+}
+
+export const useCreateChat = () => {
+  return useMutation({
+    mutationFn: (params: NewChatRequestWithTmpChatId) => createChatSection(params),
+
+    onMutate: (params) => {
+      queryClient.setQueryData<InfiniteData<MessagesResponse>>(
+        [QUERY_KEYS.INFINITE_MESSAGES, params.idchat_section],
+        () => ({
+          pageParams: [undefined],
+          pages: [
+            {
+              ...DEFAULT_PAGINATION,
+              message: [
+                {
+                  idhistory_chat: params.idchat_section,
+                  question: params.question,
+                  answer: '',
+                  created_question: '',
+                  created_answer: '',
+                  iduser: DEFAULT_PAGINATION.iduser,
+                },
+              ],
+              total: 1,
+            },
+          ],
+        })
+      )
+    },
+
+    onSuccess: (newChatSection) => {
+      queryClient.setQueryData<InfiniteData<MessagesResponse>>(
+        [QUERY_KEYS.INFINITE_MESSAGES, newChatSection.idchat_section],
+        () => ({
+          pageParams: [undefined],
+          pages: [
+            {
+              ...DEFAULT_PAGINATION,
+              message: [newChatSection],
+              total: 1,
+            },
+          ],
+        })
+      )
+
+      queryClient.setQueryData<InfiniteData<ChatSectionResponse>>(
+        [QUERY_KEYS.INFINITE_CHAT_SECTIONS],
+        (old) => {
+          if (old) {
+            const firstPage = {
+              ...old.pages[0],
+              chat_sections: [newChatSection, ...old.pages[0].chat_sections],
+            }
+
+            return {
+              ...old,
+              pages: [firstPage, ...old.pages],
+            }
+          }
+
+          return {
+            pageParams: [undefined],
+            pages: [
+              {
+                ...DEFAULT_PAGINATION,
+                total: 1,
+                chat_sections: [newChatSection],
+              },
+            ],
+          }
+        }
+      )
+    },
+
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INFINITE_CHAT_SECTIONS] })
     },

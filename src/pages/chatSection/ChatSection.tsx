@@ -1,7 +1,11 @@
-import { Container } from '@radix-ui/themes'
+import { useParams } from 'react-router-dom'
+import NewChatSectionPage from '@/pages/chatSection/components/NewChatSectionPage'
+import ChatSectionViewPage from '@/pages/chatSection/components/ChatSectionViewPage'
 
 const ChatSection = () => {
-  return <Container></Container>
+  const isNewChatSectionMode = !useParams()?.chatID
+
+  return isNewChatSectionMode ? <NewChatSectionPage /> : <ChatSectionViewPage />
 }
 
 export default ChatSection
