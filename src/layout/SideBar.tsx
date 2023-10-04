@@ -6,8 +6,9 @@ import NavLink from '@/layout/components/NavLink'
 import { MouseEvent } from 'react'
 import { ChatList } from '@/layout/components/ChatList'
 import { useNavigate } from 'react-router-dom'
+import { PiNoteThin } from "react-icons/pi"
 
-const SideBar = () => {
+const SideBar = () => { 
   const navigate = useNavigate()
 
   const onNewChat = (e: MouseEvent<HTMLButtonElement>) => {
@@ -24,6 +25,10 @@ const SideBar = () => {
         <NavLink to={'/documents'}>
           <FileTextIcon width={18} height={18} />
           Quản lý tài liệu
+        </NavLink>
+        <NavLink to={'/notes'}>
+          <PiNoteThin size={18} />
+          Quản lý ghi chú
         </NavLink>
         <NavLink to={'/new-chat'}>
           <ChatBubbleIcon width={16} height={16} />

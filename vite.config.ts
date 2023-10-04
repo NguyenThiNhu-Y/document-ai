@@ -18,4 +18,5 @@ export default defineConfig({
       '@documentComponents': path.resolve(__dirname, './src/pages/documents/components'),
     },
   },
+  define: { global: 'window' },
 })
