@@ -25,6 +25,10 @@ const SideBar = () => {
           <FileTextIcon width={18} height={18} />
           Quản lý tài liệu
         </NavLink>
+        <NavLink to={'/notes'}>
+          <FileTextIcon width={18} height={18} />
+          Quản lý ghi chú
+        </NavLink>
         <NavLink to={'/new-chat'}>
           <ChatBubbleIcon width={16} height={16} />
           Hỏi đáp

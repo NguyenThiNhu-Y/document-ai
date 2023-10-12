@@ -10,6 +10,7 @@ import { BiTimeFive } from 'react-icons/bi'
 import { useTheme } from '@emotion/react'
 import { FILE_ICONS } from '@/constants/common'
 import { DotsVerticalIcon } from '@radix-ui/react-icons'
+import { useNavigate } from 'react-router-dom'
 
 interface DocumentItemProps extends Document {}
 
@@ -17,6 +18,12 @@ const DocumentItem = forwardRef(
   ({ name, size, created }: DocumentItemProps, ref: ForwardedRef<HTMLDivElement>) => {
     const fileType = useMemo(() => name.split('.').at(-1)?.toUpperCase() as FILE_TYPES, [name])
     const { colors } = useTheme()
+
+    const navigate = useNavigate()
+
+    const onViewMindMap = () => {
+      navigate('/mindmaps')
+    }
 
     const FileIcon = FILE_ICONS[fileType]
 
@@ -55,6 +62,7 @@ const DocumentItem = forwardRef(
           </DropdownMenu.Trigger>
           <DropdownMenu.Content size={'2'}>
             <DropdownMenu.Item>Tóm tắt nội dung</DropdownMenu.Item>
+            <DropdownMenu.Item onClick={onViewMindMap}>Sơ đồ tư duy</DropdownMenu.Item>
             <DropdownMenu.Item>Xóa tài liệu</DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>

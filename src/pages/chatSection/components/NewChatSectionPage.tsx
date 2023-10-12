@@ -4,7 +4,7 @@ import { customAlphabet } from 'nanoid'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const nanoid = customAlphabet('1234567890abcdef', 10)
+const nanoid = customAlphabet('1234567890', 10)
 
 const NewChatSectionPage = () => {
   const [tmpChatID, setTmpChatID] = useState(0)

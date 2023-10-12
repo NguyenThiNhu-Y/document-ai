@@ -19,10 +19,8 @@ import {
 export const globalStyle = css({
   body: {
     margin: 0,
-    fontSize: '14px',
-    input: {
-      fontFamily: 'var(--default-font-family)',
-    },
+    fontSize: '13px',
+    'input, textArea': { fontFamily: 'var(--default-font-family)' },
   },
   '*': {
     boxSizing: 'border-box',
