@@ -4,7 +4,7 @@ import NavLink from '@/layout/components/NavLink'
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { CheckIcon, Cross2Icon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Box, Flex, IconButton, Text } from '@radix-ui/themes'
+import { Box, Button, Dialog, Flex, IconButton, Text } from '@radix-ui/themes'
 import { Ring } from '@uiball/loaders'
 import {
   ComponentProps,
@@ -16,6 +16,7 @@ import {
   useEffect,
   memo,
 } from 'react'
+import { IconButtonDelete } from './IconButtonDelete'
 
 type NavLinkProps = ComponentProps<typeof NavLink>
 
@@ -93,18 +94,20 @@ const EditAbleNavLink = ({
   }, [text])
 
   return (
-    <NavLink {...props}>
-      <CurrentView
-        ref={inputRef}
-        defaultValue={text}
-        text={inputRef.current?.value ?? text}
-        isUpdating={isLoading}
-        onUpdate={handleSubmit}
-        onEditOn={onEditOn}
-        onRemove={onRemove}
-        onEnter={onEnter}
-      />
-    </NavLink>
+    <Dialog.Root>
+      <NavLink {...props}>
+        <CurrentView
+          ref={inputRef}
+          defaultValue={text}
+          text={inputRef.current?.value ?? text}
+          isUpdating={isLoading}
+          onUpdate={handleSubmit}
+          onEditOn={onEditOn}
+          onRemove={onRemove}
+          onEnter={onEnter}
+        />
+      </NavLink>
+    </Dialog.Root>
   )
 }
 
@@ -148,14 +151,32 @@ const EditReadOnlyView = forwardRef(
           {isUpdating ? (
             <Ring size={14} color={colors.iris12} />
           ) : (
-            <>
+            <div>
               <IconButton size={'1'} variant='ghost' onClick={onEditOn}>
                 <Pencil1Icon />
               </IconButton>
-              <IconButton size={'1'} variant='ghost' onClick={onRemove}>
-                <TrashIcon />
-              </IconButton>
-            </>
+              <Dialog.Trigger>
+                <IconButton size={'1'} variant='ghost'>
+                  <TrashIcon />
+                </IconButton>
+              </Dialog.Trigger>
+              <Dialog.Content style={{ maxWidth: 450 }}>
+                <Dialog.Title>Xóa ghi chú</Dialog.Title>
+                <Dialog.Description size='2' mb='4'>
+                  Bạn có chắc chắn muốn xóa ghi chú này không?
+                </Dialog.Description>
+                <Flex gap='3' mt='4' justify='end'>
+                  <Dialog.Close>
+                    <Button variant='soft' color='gray'>
+                      Không
+                    </Button>
+                  </Dialog.Close>
+                  <Dialog.Close>
+                    <Button>Đồng ý</Button>
+                  </Dialog.Close>
+                </Flex>
+              </Dialog.Content>
+            </div>
           )}
         </ViewActionButtonBox>
       </>

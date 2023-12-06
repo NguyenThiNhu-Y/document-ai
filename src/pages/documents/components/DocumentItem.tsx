@@ -3,26 +3,38 @@ import Line from '@/components/Line'
 import { FILE_TYPES } from '@/constants/common.enum'
 import { formatDateTime } from '@/utils/datetime'
 import styled from '@emotion/styled'
-import { Card, DropdownMenu, Flex, IconButton, Text } from '@radix-ui/themes'
+import { Button, Card, Dialog, DropdownMenu, Flex, IconButton, Text } from '@radix-ui/themes'
 import prettyBytes from 'pretty-bytes'
-import { forwardRef, ForwardedRef, useMemo } from 'react'
+import { forwardRef, ForwardedRef, useMemo, useState } from 'react'
 import { BiTimeFive } from 'react-icons/bi'
 import { useTheme } from '@emotion/react'
 import { FILE_ICONS } from '@/constants/common'
 import { DotsVerticalIcon } from '@radix-ui/react-icons'
 import { useNavigate } from 'react-router-dom'
+import { useDeleteDocument } from '@/api/documentAPI/documentAPI.hooks'
 
 interface DocumentItemProps extends Document {}
 
 const DocumentItem = forwardRef(
-  ({ name, size, created }: DocumentItemProps, ref: ForwardedRef<HTMLDivElement>) => {
+  ({ iddocument, name, size, created }: DocumentItemProps, ref: ForwardedRef<HTMLDivElement>) => {
     const fileType = useMemo(() => name.split('.').at(-1)?.toUpperCase() as FILE_TYPES, [name])
     const { colors } = useTheme()
 
     const navigate = useNavigate()
 
     const onViewMindMap = () => {
-      navigate('/mindmaps')
+      navigate('/mindmaps/' + iddocument)
+    }
+
+    const onViewSummary = () => {
+      navigate('/summary/' + iddocument)
+    }
+
+    const { mutate: mutateDelete } = useDeleteDocument()
+    const onDelete = () => {
+      mutateDelete({
+        iddocument: iddocument,
+      })
     }
 
     const FileIcon = FILE_ICONS[fileType]
@@ -32,6 +44,8 @@ const DocumentItem = forwardRef(
       [FILE_TYPES.DOC]: colors.blue9,
       [FILE_TYPES.DOCX]: colors.blue9,
     }[fileType]
+
+    const [dialogOpen, setDialogOpen] = useState(false)
 
     return (
       <CardStyled>
@@ -54,26 +68,55 @@ const DocumentItem = forwardRef(
             </Flex>
           </Flex>
         </Flex>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
-            <MenuButton color='gray' variant={'ghost'}>
-              <DotsVerticalIcon />
-            </MenuButton>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content size={'2'}>
-            <DropdownMenu.Item>Tóm tắt nội dung</DropdownMenu.Item>
-            <DropdownMenu.Item onClick={onViewMindMap}>Sơ đồ tư duy</DropdownMenu.Item>
-            <DropdownMenu.Item>Xóa tài liệu</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
+        <Dialog.Root>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <MenuButton color='gray' variant={'ghost'}>
+                <DotsVerticalIcon />
+              </MenuButton>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content size={'2'}>
+              <DropdownMenu.Item onClick={onViewSummary}>Tóm tắt nội dung</DropdownMenu.Item>
+              <DropdownMenu.Item onClick={onViewMindMap}>Sơ đồ tư duy</DropdownMenu.Item>
+              <DropdownMenu.Item>
+                <Dialog.Trigger>
+                  <Text>Xóa tài liệu</Text>
+                </Dialog.Trigger>
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+          <Dialog.Content style={{ maxWidth: 450 }}>
+            <Dialog.Title>Xóa tài liệu</Dialog.Title>
+            <Dialog.Description size='2' mb='4'>
+              Bạn có chắc chắn muốn xóa tài liệu này không?
+            </Dialog.Description>
+            <Flex gap='3' mt='4' justify='end'>
+              <Dialog.Close>
+                <Button variant='soft' color='gray'>
+                  Không
+                </Button>
+              </Dialog.Close>
+              <Dialog.Close>
+                <Button onClick={onDelete}>Đồng ý</Button>
+              </Dialog.Close>
+            </Flex>
+          </Dialog.Content>
+        </Dialog.Root>
       </CardStyled>
     )
   }
 )
 
-const CardStyled = styled(Card)({
-  position: 'relative',
-})
+const CardStyled = styled(Card)(
+  {
+    position: 'relative',
+  },
+  (props) => ({
+    '&:hover': {
+      backgroundColor: props.theme.colors.irisA3,
+    },
+  })
+)
 
 const MenuButton = styled(IconButton)({
   position: 'absolute',

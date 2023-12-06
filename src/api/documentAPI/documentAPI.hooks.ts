@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
-import { DocumentRequest } from '@/api/documentAPI/documentAPI.types'
-import { getDocuments } from '@/api/documentAPI/documentAPI.api'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { DocumentRequest, DocumentSummaryRequest } from '@/api/documentAPI/documentAPI.types'
+import { deleteDocument, getDocumentSummary, getDocuments, uploadDocument } from '@/api/documentAPI/documentAPI.api'
 import { PAGE_LIMIT } from '@/api/common.constants'
 
 export const useDocuments = (params: DocumentRequest) => {
@@ -11,4 +11,31 @@ export const useDocuments = (params: DocumentRequest) => {
       return lastPage.documents?.length === PAGE_LIMIT ? allPage?.length + 1 : undefined
     },
   })
+}
+
+export const useDocumentSummary = (params: DocumentSummaryRequest) => {
+  return useQuery({
+    queryKey: ['getDocumentSummary', params],
+    queryFn: () => getDocumentSummary(params),
+  })
+}
+
+export const useDeleteDocument = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(deleteDocument, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getDocuments'])
+    },
+  })
+  return mutation
+}
+
+export const useUploadDocument = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(uploadDocument, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getDocuments'])
+    },
+  })
+  return mutation
 }

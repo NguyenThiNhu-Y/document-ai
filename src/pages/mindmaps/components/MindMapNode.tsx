@@ -1,19 +1,10 @@
-import React, {
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  forwardRef,
-  ForwardedRef,
-  ChangeEvent,
-  useState,
-  KeyboardEvent,
-} from 'react'
+import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { Handle, NodeProps, Position } from 'reactflow'
-import ReactTextareaAutosize, { TextareaAutosizeProps } from 'react-textarea-autosize'
+import ReactTextareaAutosize from 'react-textarea-autosize'
 
 import useStore from '../store'
 import styled from '@emotion/styled'
-import { Box, Text } from '@radix-ui/themes'
+import { Text } from '@radix-ui/themes'
 
 export type NodeData = {
   label: string
@@ -67,7 +58,6 @@ const NodeInput = ({ value, onChange }: NodeInputProps) => {
 
   const onEdit = () => {
     setIsEdit(true)
-    console.log(1111)
   }
 
   const onBlur = () => {

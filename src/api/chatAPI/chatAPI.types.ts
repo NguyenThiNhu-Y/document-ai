@@ -50,3 +50,10 @@ export interface NewChatResponse extends ChatSection, Message {
   created_question: string
   created_answer: string
 }
+
+export interface NewAnwserQuestionRequest {
+  idchat_section: number,
+  iduser: number,
+  question: string
+}
+

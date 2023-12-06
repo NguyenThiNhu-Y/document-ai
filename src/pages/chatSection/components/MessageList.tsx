@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList } from 'react-window'
 import MessageComponent from '@/pages/chatSection/components/Message'
@@ -16,11 +16,12 @@ interface MessageListProps {
 }
 
 const MessageList = ({ messages, isLoading }: MessageListProps) => {
+  const containerRef = useRef<HTMLDivElement>(null)
   const { listRef, setRowHeight, getRowHeight } = useVariableInfinite()
   const { colors } = useTheme()
 
   const scrollToBottom = () => {
-    listRef.current?.scrollToItem(messages.length - 1, 'end')
+    listRef.current?.scrollTo(containerRef.current?.clientHeight ?? 0)
   }
 
   useEffect(() => {
@@ -30,26 +31,28 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
 
   return (
     <>
-      {isLoading && (
+      {isLoading && !messages.length && (
         <Flex justify={'center'} height={'9'} align={'center'}>
           <Ring size={28} lineWeight={4} speed={2} color={colors.slate12} />
         </Flex>
       )}
       <AutoSizer>
         {({ width, height }) => (
-          <VariableSizeListStyled
-            width={width}
-            height={height}
-            itemCount={messages.length}
-            itemSize={getRowHeight}
-            ref={listRef}
-          >
-            {(props) => {
-              return (
-                <MessageRow {...props} data={messages[props.index]} setRowHeight={setRowHeight} />
-              )
-            }}
-          </VariableSizeListStyled>
+          <div ref={containerRef}>
+            <VariableSizeListStyled
+              width={width}
+              height={height}
+              itemCount={messages.length}
+              itemSize={getRowHeight}
+              ref={listRef}
+            >
+              {(props) => {
+                return (
+                  <MessageRow {...props} data={messages[props.index]} setRowHeight={setRowHeight} />
+                )
+              }}
+            </VariableSizeListStyled>
+          </div>
         )}
       </AutoSizer>
     </>

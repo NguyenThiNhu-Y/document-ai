@@ -3,8 +3,10 @@ import {
   ChatSectionRequest,
   ChatSectionResponse,
   EditChatSectionNameRequest,
+  Message,
   MessagesRequest,
   MessagesResponse,
+  NewAnwserQuestionRequest,
   NewChatRequest,
   NewChatResponse,
 } from '@/api/chatAPI/chatAPI.types'
@@ -29,5 +31,10 @@ export const getChatMessages = async (params: MessagesRequest) => {
 export const createChatSection = async (body: NewChatRequest) => {
   const result: NewChatResponse = await axios.post('/create_chat_section', body)
 
+  return result
+}
+
+export const createAnwserQuestion = async (body: NewAnwserQuestionRequest) => {
+  const result: Message = await axios.post('/answer_question', body)
   return result
 }

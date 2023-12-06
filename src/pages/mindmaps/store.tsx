@@ -20,19 +20,23 @@ export type RFState = {
   onEdgesChange: OnEdgesChange
   addChildNode: (parentNode: Node, position: XYPosition) => void
   updateNodeLabel: (nodeId: string, label: string) => void
+  initNodes: (nodes: Node[], edges: Edge[]) => void
 }
 
 const useStore = createWithEqualityFn<RFState>(
   (set, get) => ({
     nodes: [
-      {
-        id: 'root',
-        type: 'input',
-        data: { label: 'React Flow Mind Map' },
-        position: { x: 0, y: 0 },
-      },
+      // {
+      //   id: 'root',
+      //   type: 'input',
+      //   data: { label: 'tesst' },
+      //   position: { x: 0, y: 0 },
+      // },
     ],
     edges: [],
+    initNodes: (nodes, edges) => {
+      set({ nodes, edges })
+    },
     onNodesChange: (changes: NodeChange[]) => {
       set({
         nodes: applyNodeChanges(changes, get().nodes),
@@ -47,7 +51,7 @@ const useStore = createWithEqualityFn<RFState>(
       const newNode = {
         id: nanoid(),
         type: 'mindmap',
-        data: { label: 'New Node' },
+        data: { label: 'Nội dung mới' },
         position,
         parentNode: parentNode.id,
       }

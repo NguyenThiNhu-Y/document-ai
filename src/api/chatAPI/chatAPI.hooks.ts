@@ -1,5 +1,6 @@
-import { InfiniteData, useInfiniteQuery, useMutation } from '@tanstack/react-query'
+import { InfiniteData, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  createAnwserQuestion,
   createChatSection,
   editChatSectionName,
   getChatMessages,
@@ -172,4 +173,44 @@ export const useCreateChat = () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INFINITE_CHAT_SECTIONS] })
     },
   })
+}
+
+export const useCreateAnwserQuestion = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(createAnwserQuestion, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([QUERY_KEYS.INFINITE_MESSAGES])
+    },
+    onMutate: (params) => {
+      queryClient.setQueryData<InfiniteData<MessagesResponse>>(
+        [QUERY_KEYS.INFINITE_MESSAGES, params.idchat_section],
+        (old) => {
+          if (old) {
+            const lastPage = old.pages[old.pages.length - 1]
+
+            return {
+              ...old,
+              pages: [
+                ...old.pages,
+                {
+                  ...lastPage,
+                  message: [
+                    {
+                      idhistory_chat: params.idchat_section,
+                      question: params.question,
+                      answer: '',
+                      created_question: '',
+                      created_answer: '',
+                      iduser: DEFAULT_PAGINATION.iduser,
+                    },
+                  ],
+                },
+              ],
+            }
+          }
+        }
+      )
+    },
+  })
+  return mutation
 }

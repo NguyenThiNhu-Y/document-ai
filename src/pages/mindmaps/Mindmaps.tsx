@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import ReactFlow, {
   Controls,
   OnConnectEnd,
@@ -9,6 +9,7 @@ import ReactFlow, {
   useReactFlow,
   NodeOrigin,
   ConnectionLineType,
+  Edge,
 } from 'reactflow'
 
 import styled from '@emotion/styled'
@@ -19,6 +20,9 @@ import MindMapEdge from './components/MindMapEdge'
 
 // we need to import the React Flow styles to make it work
 import 'reactflow/dist/style.css'
+import { useParams } from 'react-router-dom'
+import { useMindMap } from '@/api/mindmapAPI/mindmapAPI.hooks'
+import { type } from 'os'
 
 const nodeTypes = {
   mindmap: MindMapNode,
@@ -34,7 +38,7 @@ const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' }
 
 function Flow() {
   // whenever you use multiple values, you should use shallow for making sure that the component only re-renders when one of the values change
-  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode } = useStore()
+  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode, initNodes } = useStore()
   const connectingNodeId = useRef<string | null>(null)
   const store = useStoreApi()
   const { project, fitView } = useReactFlow()
@@ -92,6 +96,58 @@ function Flow() {
     [getChildNodePosition]
   )
 
+  const { iddocument = -1 } = useParams()
+  const { data } = useMindMap({ iddocument: +iddocument })
+
+  useEffect(() => {
+    if (!data) return
+
+    const nodes = [
+      // {
+      //   id: String(data?.iddocument),
+      //   type: data?.node_root.type,
+      //   data: { label: data?.node_root.data },
+      //   position: {
+      //     x: 0,
+      //     y: 0,
+      //   },
+      // },
+      data.node_root,
+      ...data.node_items,
+    ]
+
+    const edges: Edge[] = data.edges
+    console.log('nodes', nodes)
+    initNodes(nodes, edges)
+  }, [data])
+
+  // useEffect(() => {
+  //   const nodes = [
+  //     {
+  //       id: 'root',
+  //       type: 'input',
+  //       data: { label: String(iddocument) },
+  //       position: { x: 0, y: 0 },
+  //     },
+  //     {
+  //       id: 'children',
+  //       type: 'mindmap',
+  //       data: { label: String(iddocument) },
+  //       position: { x: 200, y: 200 },
+  //       parentNode: 'root',
+  //     },
+  //   ]
+
+  //   const edges = [
+  //     {
+  //       id: 'edgeId',
+  //       source: 'root',
+  //       target: 'children',
+  //     },
+  //   ]
+  //   initNodes(nodes, edges)
+  // }, [])
+
   return (
     <ReactFlowStyled
       nodes={nodes}
@@ -107,7 +163,7 @@ function Flow() {
       fitView
     >
       <Controls showInteractive={false} />
-      <Panel position='top-left'>React Flow Mind Map</Panel>
+      <Panel position='top-left'>{data?.name_document}</Panel>
     </ReactFlowStyled>
   )
 }

@@ -15,3 +15,21 @@ export interface DocumentResponse extends BasePaginationResponse {
 export interface DocumentRequest extends BasePaginationRequest {
   iduser: number
 }
+
+export interface DocumentSummaryRequest {
+  iddocument: number
+}
+
+export interface DocumentSummary {
+  idsummary_document: number
+  iddocument: number
+  summary: string
+}
+
+export interface DocumentSummaryResponse {
+  summaries: DocumentSummary[]
+}
+
+export interface DocumentDeleteRequest {
+  iddocument: number
+}

@@ -21,7 +21,10 @@ export const ChatList = () => {
 
   const itemCount = hasNextPage ? chatSections.length + 1 : chatSections.length
 
-  const onRemoveChat = useCallback(() => {}, [])
+  const onRemoveChat = useCallback(() => {
+    console.log("remove")
+    
+  }, [])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleLoadMore = async (_: number, __: number) => {
