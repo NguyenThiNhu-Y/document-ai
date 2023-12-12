@@ -9,7 +9,6 @@ const DocumentViewFile = () => {
       'https://drive.google.com/file/d/1_d_UxiGcJVzouWX48UcGyBfPoHV_ovlZ/view?usp=share_link'
     )
     const text = await response.text()
-    console.log(text)
     setContent(text)
   }
 

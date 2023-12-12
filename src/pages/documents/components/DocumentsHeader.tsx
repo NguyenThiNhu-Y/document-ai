@@ -1,12 +1,19 @@
 import { useUploadDocument } from '@/api/documentAPI/documentAPI.hooks'
 import Line from '@/components/Line'
-import { Heading, Flex, IconButton, Button, Text, TextField } from '@radix-ui/themes'
+import { Heading, Flex, Button, Text, TextField } from '@radix-ui/themes'
 import { ChangeEvent, useRef, useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
 import { HiOutlineArrowUp } from 'react-icons/hi'
 
-const DocumentsHeader = () => {
+type DocumentsHeaderType = {
+  searchKeyword?: string
+  setSearchKeyword?: React.Dispatch<React.SetStateAction<string>>
+  handleSearchChange?: (event: ChangeEvent<HTMLInputElement>) => void
+}
+const DocumentsHeader: React.FC<DocumentsHeaderType> = ({ searchKeyword, handleSearchChange }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [file, setSelectedFile] = useState<File[]>([])
+
   const { mutate } = useUploadDocument()
 
   const hiddenFileInput = useRef<HTMLInputElement>(null)
@@ -34,10 +41,17 @@ const DocumentsHeader = () => {
         <Flex ml={'auto'} gap={'5'} align={'center'}>
           <TextField.Root size={'2'}>
             <TextField.Slot>
-              <CiSearch size={20}/>
+              <CiSearch size={20} />
             </TextField.Slot>
-            <TextField.Input placeholder='Tìm tài liệu' />
+            <TextField.Input
+              placeholder='Tìm tài liệu'
+              value={searchKeyword}
+              onChange={handleSearchChange}
+            />
           </TextField.Root>
+          <Button>
+            <Text mr={'2'}>Tìm kiếm</Text>
+          </Button>
           <input
             type='file'
             multiple

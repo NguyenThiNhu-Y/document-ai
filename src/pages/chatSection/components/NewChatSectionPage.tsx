@@ -2,11 +2,13 @@ import { useCreateChat, useMessages } from '@/api/chatAPI/chatAPI.hooks'
 import BaseChatSection from '@/pages/chatSection/components/BaseChatSection'
 import { customAlphabet } from 'nanoid'
 import { useEffect, useMemo, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const nanoid = customAlphabet('1234567890', 10)
 
 const NewChatSectionPage = () => {
+  const { iddocument = -1 } = useParams()
+
   const tmpChatID = useRef(+nanoid()).current
 
   const { data } = useMessages(tmpChatID)
@@ -21,6 +23,7 @@ const NewChatSectionPage = () => {
       idchat_section: tmpChatID,
       name: 'Cuộc trò chuyện mới - ' + message,
       question: message,
+      iddocument: +iddocument
     })
   }
 

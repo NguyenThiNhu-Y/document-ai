@@ -11,13 +11,11 @@ const ChatSectionViewPage = () => {
 
   const { mutate } = useCreateAnwserQuestion()
   const newQuestion = (message: string) => {
-    console.log(message)
     mutate({
       idchat_section: Number(chatID),
       iduser: 1,
       question: message
     })
-    console.log("sc")
   }
 
   return (

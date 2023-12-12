@@ -117,7 +117,6 @@ function Flow() {
     ]
 
     const edges: Edge[] = data.edges
-    console.log('nodes', nodes)
     initNodes(nodes, edges)
   }, [data])
 

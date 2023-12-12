@@ -4,7 +4,10 @@ import {
   DocumentResponse,
   DocumentSummaryRequest,
   DocumentSummary,
-  DocumentDeleteRequest
+  DocumentDeleteRequest,
+  NameDocumentRequest,
+  NameDocumentResponse,
+  IdDocumentRequest
 } from '@/api/documentAPI/documentAPI.types'
 
 export const getDocuments = async (params: DocumentRequest) => {
@@ -30,4 +33,14 @@ export const uploadDocument = async (files: FormData) => {
   }
   await axios.post('/upload-files', files, config)
   return "ok"
+}
+
+export const getNameDocument = async (params: NameDocumentRequest) => {
+  const result: NameDocumentResponse[] = await axios.get('/name_documents/' + params.iduser)
+  return result
+}
+
+export const getName = async (params: IdDocumentRequest) => {
+  const result: string = await axios.get('/get_name/' + params.iddocument)
+  return result
 }

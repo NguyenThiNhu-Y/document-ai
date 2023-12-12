@@ -14,6 +14,7 @@ export interface DocumentResponse extends BasePaginationResponse {
 
 export interface DocumentRequest extends BasePaginationRequest {
   iduser: number
+  keyword: string
 }
 
 export interface DocumentSummaryRequest {
@@ -32,4 +33,17 @@ export interface DocumentSummaryResponse {
 
 export interface DocumentDeleteRequest {
   iddocument: number
+}
+
+export interface IdDocumentRequest {
+  iddocument: number
+}
+
+export interface NameDocumentRequest {
+  iduser: number
+}
+
+export interface NameDocumentResponse {
+  iddocument: number
+  name: string
 }

@@ -1,10 +1,17 @@
-import { InfiniteData, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import {
   createAnwserQuestion,
   createChatSection,
   editChatSectionName,
   getChatMessages,
   getChatSections,
+  getInfoChatSection,
 } from '@/api/chatAPI/chatAPI.api'
 import { QUERY_KEYS } from '@/api/common.enums'
 import { DEFAULT_PAGINATION } from '@/constants/common'
@@ -12,6 +19,7 @@ import { PAGE_LIMIT } from '@/api/common.constants'
 import { queryClient } from '@/api/QueryProvider'
 import {
   ChatSectionResponse,
+  InfoChatSectionRequest,
   MessagesResponse,
   NewChatRequestWithTmpChatId,
 } from '@/api/chatAPI/chatAPI.types'
@@ -213,4 +221,11 @@ export const useCreateAnwserQuestion = () => {
     },
   })
   return mutation
+}
+
+export const useInfoChatSection = (params: InfoChatSectionRequest) => {
+  return useQuery({
+    queryKey: ['InfoChatSection', params],
+    queryFn: () => getInfoChatSection(params),
+  })
 }

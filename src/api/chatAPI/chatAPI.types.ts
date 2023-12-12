@@ -5,6 +5,7 @@ export interface ChatSection {
   name: string
   created: string
   iduser: number
+  iddocument: number
 }
 
 export interface ChatSectionResponse extends BasePaginationResponse {
@@ -42,6 +43,7 @@ export interface NewChatRequest {
 
 export interface NewChatRequestWithTmpChatId extends NewChatRequest {
   idchat_section: number
+  iddocument: number
 }
 
 export interface NewChatResponse extends ChatSection, Message {
@@ -57,3 +59,10 @@ export interface NewAnwserQuestionRequest {
   question: string
 }
 
+export interface InfoChatSectionRequest {
+  idchat_section: number
+}
+
+export interface InfoChatSectionResponse extends ChatSection {
+  document_name: number
+}

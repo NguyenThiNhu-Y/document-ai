@@ -1,15 +1,18 @@
+import React from 'react'
 import { useDocuments } from '@/api/documentAPI/documentAPI.hooks'
-import { DocumentRequest } from '@/api/documentAPI/documentAPI.types'
-import { DEFAULT_PAGINATION } from '@/constants/common'
+
 import { Flex, Grid } from '@radix-ui/themes'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 import DocumentItem from '@documentComponents/DocumentItem'
 import { Ring } from '@uiball/loaders'
 import { useTheme } from '@emotion/react'
+import { DocumentRequest } from '@/api/documentAPI/documentAPI.types'
 
-const DocumentList = () => {
-  const [pagination] = useState<DocumentRequest>(DEFAULT_PAGINATION)
+type DocumentListType = {
+  pagination: DocumentRequest
+}
+const DocumentList: React.FC<DocumentListType> = ({ pagination }) => {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
     useDocuments(pagination)
   const { ref, inView } = useInView()

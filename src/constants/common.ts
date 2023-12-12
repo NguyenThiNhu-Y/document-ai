@@ -6,6 +6,7 @@ export const DEFAULT_PAGINATION = {
   iduser: 1,
   page_size: PAGE_LIMIT,
   current_page: 1,
+  keyword: '',
 }
 
 export const FILE_ICONS = {
