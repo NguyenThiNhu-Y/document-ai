@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import EditAbleNavLink from '@/layout/components/EditAbleNavLink'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useChatSections } from '@/api/chatAPI/chatAPI.hooks'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
@@ -9,10 +9,13 @@ import Skeleton from 'react-loading-skeleton'
 import { Flex } from '@radix-ui/themes'
 import { Ring } from '@uiball/loaders'
 import { useTheme } from '@emotion/react'
+import { DialogCustom } from '@/components/Dialog'
+import { createPortal } from 'react-dom'
 
 export const ChatList = () => {
   const { data, hasNextPage, fetchNextPage, isFetching, isFetchingNextPage } = useChatSections()
   const { colors } = useTheme()
+  const [isShowDialog, setIsShowDialog] = useState(false)
 
   const chatSections = useMemo(
     () => data?.pages.flatMap((page) => page.chat_sections) ?? [],
@@ -22,8 +25,7 @@ export const ChatList = () => {
   const itemCount = hasNextPage ? chatSections.length + 1 : chatSections.length
 
   const onRemoveChat = useCallback(() => {
-    console.log("remove")
-    
+    console.log('remove')
   }, [])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,44 +43,48 @@ export const ChatList = () => {
     )
 
   return (
-    <AutoSizer>
-      {({ width, height }) => (
-        <InfiniteLoader
-          isItemLoaded={CheckItemLoaded}
-          itemCount={itemCount}
-          loadMoreItems={handleLoadMore}
-        >
-          {({ onItemsRendered, ref }) => (
-            <FixedSizeListStyled
-              width={width}
-              height={height}
-              itemSize={36}
-              itemCount={itemCount}
-              onItemsRendered={onItemsRendered}
-              ref={ref}
-            >
-              {(props) => (
-                <RowItem style={props.style}>
-                  {CheckItemLoaded(props.index) ? (
-                    <EditAbleNavLink
-                      to={`/chat/${chatSections[props.index].idchat_section}`}
-                      onRemove={onRemoveChat}
-                      className='chat-section'
-                      key={chatSections[props.index].idchat_section}
-                      chatSectionID={chatSections[props.index].idchat_section}
-                    >
-                      {chatSections[props.index]?.name}
-                    </EditAbleNavLink>
-                  ) : (
-                    <Skeleton height={32} baseColor={colors.slate4} />
-                  )}
-                </RowItem>
-              )}
-            </FixedSizeListStyled>
-          )}
-        </InfiniteLoader>
-      )}
-    </AutoSizer>
+    <>
+      {isShowDialog && createPortal(<DialogCustom />, document.body)}
+      <AutoSizer>
+        {({ width, height }) => (
+          <InfiniteLoader
+            isItemLoaded={CheckItemLoaded}
+            itemCount={itemCount}
+            loadMoreItems={handleLoadMore}
+          >
+            {({ onItemsRendered, ref }) => (
+              <FixedSizeListStyled
+                width={width}
+                height={height}
+                itemSize={36}
+                itemCount={itemCount}
+                onItemsRendered={onItemsRendered}
+                ref={ref}
+              >
+                {(props) => (
+                  <RowItem style={props.style}>
+                    {CheckItemLoaded(props.index) ? (
+                      <EditAbleNavLink
+                        to={`/chat/${chatSections[props.index].idchat_section}`}
+                        onRemove={onRemoveChat}
+                        className='chat-section'
+                        key={chatSections[props.index].idchat_section}
+                        chatSectionID={chatSections[props.index].idchat_section}
+                        setIsShowDialog={setIsShowDialog}
+                      >
+                        {chatSections[props.index]?.name}
+                      </EditAbleNavLink>
+                    ) : (
+                      <Skeleton height={32} baseColor={colors.slate4} />
+                    )}
+                  </RowItem>
+                )}
+              </FixedSizeListStyled>
+            )}
+          </InfiniteLoader>
+        )}
+      </AutoSizer>
+    </>
   )
 }
 

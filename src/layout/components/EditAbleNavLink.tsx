@@ -4,8 +4,9 @@ import NavLink from '@/layout/components/NavLink'
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { CheckIcon, Cross2Icon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Box, Button, Dialog, Flex, IconButton, Text } from '@radix-ui/themes'
+import { Box, Dialog, Flex, IconButton, Text } from '@radix-ui/themes'
 import { Ring } from '@uiball/loaders'
+
 import {
   ComponentProps,
   forwardRef,
@@ -16,7 +17,6 @@ import {
   useEffect,
   memo,
 } from 'react'
-import { IconButtonDelete } from './IconButtonDelete'
 
 type NavLinkProps = ComponentProps<typeof NavLink>
 
@@ -24,6 +24,7 @@ interface EditAbleNavLinkProps extends NavLinkProps {
   onRemove: () => void
   children: string
   chatSectionID: number
+  setIsShowDialog: (value: boolean) => void
 }
 
 interface EditInputProps {
@@ -37,12 +38,14 @@ interface EditReadOnlyViewProps {
   onRemove: (e: MouseEvent<HTMLButtonElement>) => void
   text: string
   isUpdating: boolean
+  setIsShowDialog: (value: boolean) => void
 }
 
 const EditAbleNavLink = ({
   onRemove,
   children: text,
   chatSectionID,
+  setIsShowDialog,
   ...props
 }: EditAbleNavLinkProps) => {
   const { mutate, isLoading } = useUpdateChatSectionName()
@@ -105,6 +108,7 @@ const EditAbleNavLink = ({
           onEditOn={onEditOn}
           onRemove={onRemove}
           onEnter={onEnter}
+          setIsShowDialog={setIsShowDialog}
         />
       </NavLink>
     </Dialog.Root>
@@ -136,9 +140,9 @@ const EditInput = forwardRef<HTMLInputElement, EditInputProps>(
 )
 
 const EditReadOnlyView = forwardRef(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ({ onEditOn, onRemove, text, isUpdating }: EditReadOnlyViewProps, _ref) => {
+  ({ onEditOn, text, isUpdating, setIsShowDialog }: EditReadOnlyViewProps) => {
     const { colors } = useTheme()
+
     return (
       <>
         <TextStyled>{text}</TextStyled>
@@ -155,27 +159,17 @@ const EditReadOnlyView = forwardRef(
               <IconButton size={'1'} variant='ghost' onClick={onEditOn}>
                 <Pencil1Icon />
               </IconButton>
-              <Dialog.Trigger>
-                <IconButton size={'1'} variant='ghost'>
-                  <TrashIcon />
-                </IconButton>
-              </Dialog.Trigger>
-              <Dialog.Content style={{ maxWidth: 450 }}>
-                <Dialog.Title>Xóa ghi chú</Dialog.Title>
-                <Dialog.Description size='2' mb='4'>
-                  Bạn có chắc chắn muốn xóa ghi chú này không?
-                </Dialog.Description>
-                <Flex gap='3' mt='4' justify='end'>
-                  <Dialog.Close>
-                    <Button variant='soft' color='gray'>
-                      Không
-                    </Button>
-                  </Dialog.Close>
-                  <Dialog.Close>
-                    <Button>Đồng ý</Button>
-                  </Dialog.Close>
-                </Flex>
-              </Dialog.Content>
+
+              <IconButton
+                size={'1'}
+                variant='ghost'
+                onClick={() => {
+                  console.log('delete')
+                  setIsShowDialog(true)
+                }}
+              >
+                <TrashIcon />
+              </IconButton>
             </div>
           )}
         </ViewActionButtonBox>
