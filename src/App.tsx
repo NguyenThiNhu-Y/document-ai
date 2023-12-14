@@ -6,7 +6,7 @@ import Mindmaps from '@/pages/mindmaps/Mindmaps'
 import Note from '@/pages/notes/Note'
 import DocumentSummary from './pages/documents/components/DocumentSummary'
 import NoteCreate from './pages/notes/components/NoteCreate'
-
+import './app.css'
 function App() {
   return (
     <Routes>

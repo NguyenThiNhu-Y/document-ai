@@ -8,9 +8,13 @@ import { ChatList } from '@/layout/components/ChatList'
 import { useNavigate } from 'react-router-dom'
 import { PiNotebook } from 'react-icons/pi'
 import { useNameDocument } from '@/api/documentAPI/documentAPI.hooks'
+import { createPortal } from 'react-dom'
+import { DialogCustom } from '@/components/Dialog'
 
 const SideBar = () => {
   const navigate = useNavigate()
+  const portalContainer = document.getElementById('root')
+  const [isShowDialog, setIsShowDialog] = useState(false)
   const [selectedDocId, setSelectedDocId] = useState(-1)
   const iduser = 1
   const { data } = useNameDocument({ iduser: iduser })
@@ -34,6 +38,13 @@ const SideBar = () => {
           <FileTextIcon width={18} height={18} />
           Quản lý tài liệu
         </NavLink>
+        <button
+          className='text-orange-300 flex bg-slate-400 items-center hover:bg-slate-600'
+          onClick={() => setIsShowDialog(!isShowDialog)}
+        >
+          <FileTextIcon width={18} height={18} />
+          open dialog
+        </button>
         <NavLink to={'/notes'}>
           <PiNotebook size={'18'} />
           Quản lý ghi chú
@@ -83,6 +94,11 @@ const SideBar = () => {
         </FlexItem>
       </Flex>
       <UserBottomNav />
+      {isShowDialog &&
+        createPortal(
+          <DialogCustom setIsShowDialog={setIsShowDialog} message='Are you sure ?' />,
+          portalContainer
+        )}
     </GridStyled>
   )
 }
