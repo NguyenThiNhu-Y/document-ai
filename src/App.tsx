@@ -4,9 +4,10 @@ import Documents from '@/pages/documents/Documents'
 import ChatSection from '@/pages/chatSection/ChatSection'
 import Mindmaps from '@/pages/mindmaps/Mindmaps'
 import Note from '@/pages/notes/Note'
-import DocumentSummary from './pages/documents/components/DocumentSummary'
-import NoteCreate from './pages/notes/components/NoteCreate'
-import './app.css'
+import DocumentSummary from '@/pages/documents/components/DocumentSummary'
+import NoteCreate from '@/pages/notes/components/NoteCreate'
+import Auth from '@/pages/auth/Auth'
+import '@/app.css'
 function App() {
   return (
     <Routes>
@@ -20,10 +21,7 @@ function App() {
         <Route path='create-note' element={<NoteCreate />} />
         <Route path='summary/:iddocument' element={<DocumentSummary />} />
       </Route>
-      <Route path='public'>
-        <Route path='login' />
-        <Route path='register' />
-      </Route>
+      <Route path='auth' element={<Auth />} />
       <Route path='*' />
     </Routes>
   )
