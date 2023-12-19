@@ -3,6 +3,9 @@ import Input from '@/pages/auth/components/Input'
 import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import { Button, Text } from '@radix-ui/themes'
+import { provider, auth } from '@/firebase/firebase'
+import { signInWithPopup } from 'firebase/auth'
+import { login } from '@/api/authAPI/auth.api'
 
 const Auth: React.FC = () => {
   const [authData, setAuthData] = useState({
@@ -19,6 +22,28 @@ const Auth: React.FC = () => {
   }
   const toggleStateAuth = () => {
     setStateAuth((pre) => (pre === 'login' ? 'register' : 'login'))
+  }
+  const handleLoginWithGoogle = () => {
+    signInWithPopup(auth, provider).then(async (res) => {
+      console.log(res)
+
+      console.log({
+        email: res.user.email,
+        username: res.user.displayName,
+        avatar: res.user.photoURL,
+      })
+      if (res.user.email && res.user.displayName && res.user.photoURL) {
+        const response = await login({
+          email: res.user.email,
+          username: res.user.displayName,
+          avatar: res.user.photoURL,
+        })
+        console.log('api login', response)
+      }
+    })
+    // .catch((err) => {
+    //   console.log(err, 'err')
+    // })
   }
   return (
     <div className='flex justify-center items-center h-screen'>
@@ -71,7 +96,10 @@ const Auth: React.FC = () => {
             </span>
           </p>
           <div className='border-t mt-4'>
-            <div className='mt-6 border rounded-md p-4 flex items-center font-semibold hover:cursor-pointer'>
+            <div
+              onClick={handleLoginWithGoogle}
+              className='mt-6 border rounded-md p-4 flex items-center font-semibold hover:cursor-pointer hover:bg-neutral-700'
+            >
               <FcGoogle fontSize={26} className='mr-2' /> Continue with Google
             </div>
             <div className='mt-2 border rounded-md p-4 flex items-center font-semibold'>

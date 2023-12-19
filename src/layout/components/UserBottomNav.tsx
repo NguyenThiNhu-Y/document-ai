@@ -2,6 +2,7 @@ import { DotsVerticalIcon } from '@radix-ui/react-icons'
 import { Avatar, DropdownMenu, Flex, Heading, IconButton, Text } from '@radix-ui/themes'
 import { useTheme } from 'next-themes'
 import { memo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const UserBottomNav = () => {
   return (
@@ -17,6 +18,7 @@ const UserBottomNav = () => {
 }
 
 const UserBottomNavMenu = () => {
+  const navigate = useNavigate()
   const { theme, setTheme } = useTheme()
   const isDarkMode = theme === 'dark'
 
@@ -36,7 +38,7 @@ const UserBottomNavMenu = () => {
           Chế độ tối
         </DropdownMenu.CheckboxItem>
         <DropdownMenu.Separator />
-        <DropdownMenu.Item>Đăng xuất</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => navigate('auth')}>Đăng xuất</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   )
