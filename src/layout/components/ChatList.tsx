@@ -44,7 +44,14 @@ export const ChatList = () => {
 
   return (
     <>
-      {isShowDialog && createPortal(<DialogCustom />, document.body)}
+      {isShowDialog &&
+        createPortal(
+          <DialogCustom
+            message='Bạn có chắc chắn muốn xóa cuộc trò chuyện này không ?'
+            setIsShowDialog={setIsShowDialog}
+          />,
+          document.body
+        )}
       <AutoSizer>
         {({ width, height }) => (
           <InfiniteLoader

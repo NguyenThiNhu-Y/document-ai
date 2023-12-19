@@ -1,8 +1,7 @@
 import React from 'react'
-import { LiaTimesSolid } from 'react-icons/lia'
-import { MdOutlineDelete } from 'react-icons/md'
-import { TiCancel } from 'react-icons/ti'
 import '@/components/Dialog/style.css'
+import { useDeleteChatSection } from '@/api/chatAPI/chatAPI.hooks'
+import { useNavigate, useParams } from 'react-router-dom'
 
 type DialogType = {
   message: string
@@ -11,47 +10,53 @@ type DialogType = {
 const Dialog: React.FC<DialogType> = ({ message, setIsShowDialog }) => {
   const handleClose = () => {
     console.log('dialog closed')
-    setTimeout(() => {
-      setIsShowDialog(false)
-    }, 200)
+    setIsShowDialog(false)
   }
   const handleDialogClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
   }
 
+  const navigate = useNavigate()
+
+  const onSuccess = () => {
+    handleClose()
+    navigate('/new-chat/-1')
+  }
+
+  const { chatID = -1 } = useParams()
+  const { mutate } = useDeleteChatSection()
+  const onDelete = () => {
+    mutate(
+      {
+        idchat_section: +chatID,
+      },
+      { onSuccess: onSuccess }
+    )
+  }
+
   return (
     <div
       className='fixed top-0 bottom-0 left-0 right-0'
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+      style={{ backgroundColor: '#00082F46' }}
       onClick={handleClose}
     >
       <div
-        className='w-[400px] bg-white text-black absolute top-[50%] left-[50%] z-50 rounded-md overflow-hidden'
+        className='w-[450px] bg-white text-black absolute top-[50%] left-[50%] z-50 rounded-md overflow-hidden wrapper'
         id='dialog'
         style={{ transform: 'translate(-50%, -50%)' }}
         onClick={handleDialogClick}
       >
-        <div className='flex justify-end border-b p-2'>
-          <button
-            className='p-2 font-semibold rounded-md border hover:bg-slate-300 '
-            onClick={handleClose}
-          >
-            <LiaTimesSolid />
-          </button>
-        </div>
-        <div className='px-8 py-4 text-center'>
-          <h4 className='font-semibold text-xl'>{message}</h4>
+        <div>
+          <h1 className='heading'>Xóa đoạn chat</h1>
+          <p className='content'>{message}</p>
         </div>
         <div className='flex justify-end'>
-          <div className='flex font-semibold p-2 text-white'>
-            <button
-              className='flex items-center border text-black px-2 py-1 rounded-md hover:bg-slate-300'
-              onClick={handleClose}
-            >
-              <TiCancel /> <span className='ml-1'>Cancel</span>
+          <div className='flex text'>
+            <button onClick={handleClose} className='btn btnCancle'>
+              Không
             </button>
-            <button className='flex items-center bg-red-400 px-2 py-1 ml-2 rounded-md hover:bg-red-600'>
-              <MdOutlineDelete /> <span>Delete</span>
+            <button className='btn btnOk' onClick={onDelete}>
+              Đồng ý
             </button>
           </div>
         </div>

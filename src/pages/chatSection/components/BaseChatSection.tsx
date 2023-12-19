@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
-import { Flex, Heading, TextField } from '@radix-ui/themes'
+import { Flex, Select } from '@radix-ui/themes'
 import MemoMessageList from '@/pages/chatSection/components/MessageList'
 import InputBox from '@/pages/chatSection/components/InputBox'
 import { Message } from '@/api/chatAPI/chatAPI.types'
 import { useParams } from 'react-router-dom'
-import { useName } from '@/api/documentAPI/documentAPI.hooks'
 import { useInfoChatSection } from '@/api/chatAPI/chatAPI.hooks'
+import { useEffect, useState } from 'react'
+import { useNameDocument } from '@/api/documentAPI/documentAPI.hooks'
 
 interface BaseChatSectionProps {
   messages: Message[]
@@ -14,16 +15,56 @@ interface BaseChatSectionProps {
 }
 
 const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps) => {
+  let currentURL = ''
+  let iddocument = -1
+  useEffect(() => {
+    // Get the current URL
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    currentURL = window.location.href
+    const urlParts = currentURL.split('/')
+
+    // Get the last part of the URL
+    const lastPart = urlParts[urlParts.length - 1]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    iddocument = +lastPart
+  }, [])
+
   const { chatID = -1 } = useParams()
   const { data } = useInfoChatSection({ idchat_section: +chatID })
+  if (!currentURL.includes('new-chat')) {
+    iddocument = data == null ? -1 : data.iddocument
+  }
 
+  console.log('iddocument', iddocument)
+  console.log('chatID', chatID)
+  const [selectedDocId, setSelectedDocId] = useState(iddocument)
+  const iduser = 1
+  const { data: documents } = useNameDocument({ iduser: iduser })
+  const handleChangeDocId = (value: string) => {
+    setSelectedDocId(+value)
+  }
+
+  useEffect(() => {
+    setSelectedDocId(iddocument)
+    // eslint-disable-next-line
+  }, [chatID])
 
   return (
     <Wrapper direction={'column'} align={'center'}>
       <Flex py={'3'} align={'baseline'}>
-        <Heading size='3' mx='5'>
-          {data == null ? 'Tất cả tài liệu' : 'Loại tài liệu: ' + data.document_name}
-        </Heading>
+        <Select.Root
+          value={String(selectedDocId)}
+          onValueChange={handleChangeDocId}
+          disabled={chatID !== -1}
+        >
+          <Select.Trigger />
+          <Select.Content position='popper'>
+            <Select.Item value='-1'>Tất cả tài liệu</Select.Item>
+            {documents?.map((document) => (
+              <Select.Item value={String(document.iddocument)}>{document.name}</Select.Item>
+            ))}
+          </Select.Content>
+        </Select.Root>
       </Flex>
       <FlexFullItem>
         <MemoMessageList messages={messages} isLoading={isLoading} />
