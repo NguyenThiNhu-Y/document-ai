@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Input from '@/pages/auth/components/Input'
 import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
@@ -10,9 +10,11 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { createPortal } from 'react-dom'
 import Loading from '@/pages/loading/Loading'
+import { APP_CONTEXT } from '@/context'
 
 const Auth: React.FC = () => {
   const navigate = useNavigate()
+  const context = useContext(APP_CONTEXT)
   const [authData, setAuthData] = useState({
     email: '',
     password: '',
@@ -59,7 +61,9 @@ const Auth: React.FC = () => {
         })
         if (response.status === 200) {
           console.log('200', response.data)
-
+          if (context.setUserData) {
+            context.setUserData(response.data.user)
+          }
           if (response.message) {
             toast.success(response.message)
           }

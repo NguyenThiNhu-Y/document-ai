@@ -1,3 +1,5 @@
+import { UserType } from '@/@types/user'
+
 export interface AuthParam {
   username?: string
   email: string
@@ -8,7 +10,7 @@ export interface AuthParam {
 export interface ResponseAuth {
   status: number
   data: {
-    user: unknown
+    user: UserType
     token?: string
   }
   message?: string

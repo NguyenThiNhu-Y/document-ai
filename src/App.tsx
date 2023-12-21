@@ -8,11 +8,12 @@ import DocumentSummary from '@/pages/documents/components/DocumentSummary'
 import NoteCreate from '@/pages/notes/components/NoteCreate'
 import Auth from '@/pages/auth/Auth'
 import { Toaster } from 'react-hot-toast'
+import { AppProvider } from '@/context'
 import '@/app.css'
 
 function App() {
   return (
-    <>
+    <AppProvider>
       <Toaster position='top-center' reverseOrder={false} />
       <Routes>
         <Route path='/' element={<Layout />}>
@@ -28,7 +29,7 @@ function App() {
         <Route path='auth' element={<Auth />} />
         <Route path='*' />
       </Routes>
-    </>
+    </AppProvider>
   )
 }
 
