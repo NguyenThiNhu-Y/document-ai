@@ -16,6 +16,7 @@ const UserBottomNav = () => {
               fallback={context.userData.username.charAt(0)}
               src={context.userData.avatar}
               alt={context.userData.username}
+              className='rounded-full'
             />
           ) : (
             <Avatar fallback={context.userData.username.charAt(0)} variant={'soft'} />
