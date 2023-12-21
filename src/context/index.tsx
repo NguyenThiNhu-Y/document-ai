@@ -10,6 +10,7 @@ interface AppContextValue {
   setUserData?: Dispatch<SetStateAction<UserType | null>>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const APP_CONTEXT = createContext<AppContextValue>({
   userData: null,
   setUserData: undefined,

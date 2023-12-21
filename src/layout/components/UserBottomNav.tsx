@@ -2,7 +2,8 @@ import { APP_CONTEXT } from '@/context'
 import { DotsVerticalIcon } from '@radix-ui/react-icons'
 import { Avatar, DropdownMenu, Flex, Heading, IconButton, Text } from '@radix-ui/themes'
 import { useTheme } from 'next-themes'
-import { memo, useContext } from 'react'
+import { memo, useCallback, useContext } from 'react'
+import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 const UserBottomNav = () => {
@@ -36,12 +37,22 @@ const UserBottomNav = () => {
 
 const UserBottomNavMenu = () => {
   const navigate = useNavigate()
+  const context = useContext(APP_CONTEXT)
   const { theme, setTheme } = useTheme()
   const isDarkMode = theme === 'dark'
 
   const toggleTheme = () => {
     setTheme(isDarkMode ? 'light' : 'dark')
   }
+
+  const handleLogout = useCallback(() => {
+    if (context.setUserData) {
+      context.setUserData(null)
+    }
+    navigate('auth')
+    toast.success('Logged out !!!')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <DropdownMenu.Root>
@@ -55,7 +66,7 @@ const UserBottomNavMenu = () => {
           Chế độ tối
         </DropdownMenu.CheckboxItem>
         <DropdownMenu.Separator />
-        <DropdownMenu.Item onClick={() => navigate('auth')}>Đăng xuất</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={handleLogout}>Đăng xuất</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   )
