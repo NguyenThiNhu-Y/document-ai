@@ -7,6 +7,7 @@ export default {
         'green-primary': '#10a37f',
         'green-primary-hover': '#08664f',
         'main-color': '#5b5bd6',
+        'main-color-hover': '#0202f0',
       },
     },
   },

@@ -15,3 +15,12 @@ export interface ResponseAuth {
   }
   message?: string
 }
+
+export interface UserRequest {
+  keyword: string
+}
+
+export interface UserRespone {
+  iduser: number
+  email: string
+}
