@@ -1,16 +1,25 @@
 import styled from '@emotion/styled'
-import { Flex, Heading } from '@radix-ui/themes'
+import {
+  Avatar,
+  Button,
+  DropdownMenu,
+  Flex,
+  Heading,
+  Select as RadixSelect,
+  Text,
+} from '@radix-ui/themes'
 import MemoMessageList from '@/pages/chatSection/components/MessageList'
 import InputBox from '@/pages/chatSection/components/InputBox'
 import { Message } from '@/api/chatAPI/chatAPI.types'
 import { useParams } from 'react-router-dom'
 import { useInfoChatSection } from '@/api/chatAPI/chatAPI.hooks'
 import { FaUserPlus } from 'react-icons/fa6'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Select, { MultiValue } from 'react-select'
-import Dialog from '@/components/Dialog/Dialog'
-import { useAllUser } from '@/api/authAPI/auth.hooks'
-
+import { useAllUser, useGetUserInGroup } from '@/api/authAPI/auth.hooks'
+import { useNameDocument } from '@/api/documentAPI/documentAPI.hooks'
+import DialogAddUser from '@/components/Dialog/DialogAddUser'
+import { BiSolidGroup } from 'react-icons/bi'
 interface BaseChatSectionProps {
   messages: Message[]
   onSubmit: (message: string) => void
@@ -23,8 +32,38 @@ interface Option {
 }
 
 const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps) => {
+  let currentURL = ''
+  let iddocument = -1
+  useEffect(() => {
+    // Get the current URL
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    currentURL = window.location.href
+    const urlParts = currentURL.split('/')
+
+    // Get the last part of the URL
+    const lastPart = urlParts[urlParts.length - 1]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    iddocument = +lastPart
+  }, [])
+
   const { chatID = -1 } = useParams()
   const { data } = useInfoChatSection({ idchat_section: +chatID })
+
+  if (!currentURL.includes('new-chat')) {
+    iddocument = data == null ? -1 : data.iddocument
+  }
+
+  const [selectedDocId, setSelectedDocId] = useState(iddocument)
+  const iduser = 1
+  const { data: documents } = useNameDocument({ iduser: iduser })
+  const handleChangeDocId = (value: string) => {
+    setSelectedDocId(+value)
+  }
+
+  useEffect(() => {
+    setSelectedDocId(iddocument)
+    // eslint-disable-next-line
+  }, [chatID])
 
   const [selectedOptions, setSelectedOptions] = useState<Option[] | null>(null)
   const [isShowDialog, setIsShowDialog] = useState(false)
@@ -32,6 +71,8 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
   const [keyword, setKeyword] = useState<string>('')
 
   const { data: dataUser } = useAllUser({ keyword: '' })
+  const { data: dataUserInGroup } = useGetUserInGroup({ idchatsection: +chatID })
+  console.log('data', dataUserInGroup)
   let optionList: Option[] = []
   if (dataUser) {
     optionList = dataUser.map((user) => {
@@ -46,12 +87,14 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
   const handleChangeInput = (newValue: string) => {
     setKeyword(newValue)
   }
+
   return (
     <>
       {isShowDialog && (
-        <Dialog
+        <DialogAddUser
           setIsShowDialog={setIsShowDialog}
           title='Tìm người dùng muốn thêm vào cuộc trò chuyện'
+          value={selectedOptions}
         >
           <div>
             {dataUser && (
@@ -68,25 +111,71 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
               />
             )}
           </div>
-        </Dialog>
+        </DialogAddUser>
       )}
       <Wrapper direction={'column'} align={'center'}>
         <Header>
-          <Heading size='3' mx='5'>
-            {data == null ? 'Tất cả tài liệu' : 'Loại tài liệu: ' + data.document_name}
-          </Heading>
+          <RadixSelect.Root
+            value={String(selectedDocId)}
+            onValueChange={handleChangeDocId}
+            disabled={chatID !== -1}
+          >
+            <RadixSelect.Trigger />
+            <RadixSelect.Content position='popper'>
+              <RadixSelect.Item value='-1'>Tất cả tài liệu</RadixSelect.Item>
+              {documents?.map((document) => (
+                <RadixSelect.Item value={String(document.iddocument)}>
+                  {document.name}
+                </RadixSelect.Item>
+              ))}
+            </RadixSelect.Content>
+          </RadixSelect.Root>
+          <div
+            className='absolute top-[50%] right-12 flex items-center mr-3 p-2'
+            style={{
+              transform: 'translateY(-50%)',
+            }}
+          >
+            <DropdownMenu.Root>
+              {dataUserInGroup && dataUserInGroup?.length > 0 && (
+                <DropdownMenu.Trigger>
+                  <Button style={{ backgroundColor: '#00003B0D', color: 'gray' }}>
+                    <span>{dataUserInGroup?.length}</span>
+                    <BiSolidGroup size={20} />
+                  </Button>
+                </DropdownMenu.Trigger>
+              )}
+              <DropdownMenu.Content>
+                {dataUserInGroup?.map((user, index) => (
+                  <>
+                    <DropdownMenuItemStyle disabled={true}>
+                      <Avatar
+                        fallback={user.username.charAt(0)}
+                        src={user.avatar}
+                        variant={'soft'}
+                        radius='full'
+                        mr={'4'}
+                      />
+                      <Flex direction={'column'} mr={'auto'}>
+                        <Heading size={'1'}>{user.username}</Heading>
+                        <Text size={'1'}>{user.email}</Text>
+                      </Flex>
+                    </DropdownMenuItemStyle>
+                    <DropdownMenu.Separator hidden={index == dataUserInGroup?.length - 1} />
+                  </>
+                ))}
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          </div>
           <div
             className='absolute top-[50%] right-5'
             style={{
               transform: 'translateY(-50%)',
             }}
           >
-            <button
-              onClick={() => setIsShowDialog(true)}
-              className='text-main-color hover:main-color-hover rounded p-2 '
-            >
-              <FaUserPlus />
-            </button>
+            <Button onClick={() => setIsShowDialog(true)}>
+              <FaUserPlus size={16} />
+            </Button>
           </div>
         </Header>
         <FlexFullItem>
@@ -138,4 +227,8 @@ const Header = styled.div({
   padding: '10px 0',
 })
 
+const DropdownMenuItemStyle = styled(DropdownMenu.Item)({
+  marginTop: '8px',
+  marginBottom: '8px',
+})
 export default BaseChatSection

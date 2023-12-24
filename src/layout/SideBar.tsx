@@ -8,9 +8,13 @@ import { ChatList } from '@/layout/components/ChatList'
 import { useNavigate } from 'react-router-dom'
 import { PiNotebook } from 'react-icons/pi'
 import { useNameDocument } from '@/api/documentAPI/documentAPI.hooks'
+// import { createPortal } from 'react-dom'
+// import { DialogCustom } from '@/components/Dialog'
 
 const SideBar = () => {
   const navigate = useNavigate()
+  // const portalContainer = document.getElementById('root')
+  // const [isShowDialog, setIsShowDialog] = useState(false)
   const [selectedDocId, setSelectedDocId] = useState(-1)
   const iduser = 1
   const { data } = useNameDocument({ iduser: iduser })
@@ -41,9 +45,6 @@ const SideBar = () => {
         <NavLink to={'/new-chat/' + selectedDocId}>
           <ChatBubbleIcon width={16} height={16} />
           Hỏi đáp
-          {/* <IconButton size={'1'} variant='ghost' ml={'auto'} onClick={onNewChat}>
-            <PlusIcon />
-          </IconButton> */}
           <Dialog.Root>
             <Dialog.Trigger>
               <IconButton size={'1'} variant='ghost' ml={'auto'}>

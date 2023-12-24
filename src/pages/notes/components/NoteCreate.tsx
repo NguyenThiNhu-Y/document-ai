@@ -13,9 +13,9 @@ const NoteCreate = () => {
   }
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const { mutate, isLoading, isError, isSuccess, error } = useCreateNote()
+  const { mutate } = useCreateNote()
 
-  const onChangTitle= (e: ChangeEvent<HTMLInputElement>) => {
+  const onChangTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value)
   }
   const onCreateNote = () => {
@@ -68,6 +68,5 @@ const NoteCreate = () => {
 }
 
 const TextFieldInputStyle = styled(TextField.Input)({ fontSize: 13 })
-
 
 export default NoteCreate

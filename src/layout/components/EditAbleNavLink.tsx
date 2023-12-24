@@ -164,7 +164,6 @@ const EditReadOnlyView = forwardRef(
                 size={'1'}
                 variant='ghost'
                 onClick={() => {
-                  console.log('delete')
                   setIsShowDialog(true)
                 }}
               >

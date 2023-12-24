@@ -24,3 +24,19 @@ export interface UserRespone {
   iduser: number
   email: string
 }
+
+export interface AddUserToGroup {
+  idchatsection: number
+  list_iduser: number[]
+}
+
+export interface UserInGroupRequest {
+  idchatsection: number
+}
+
+export interface UserInGroup {
+  iduser: number
+  username: string
+  email: string
+  avatar: string
+}

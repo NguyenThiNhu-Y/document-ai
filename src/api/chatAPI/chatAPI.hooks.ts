@@ -8,6 +8,7 @@ import {
 import {
   createAnwserQuestion,
   createChatSection,
+  deleteChatSection,
   editChatSectionName,
   getChatMessages,
   getChatSections,
@@ -26,7 +27,7 @@ import {
 
 export const useChatSections = () => {
   return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.INFINITE_CHAT_SECTIONS],
+    queryKey: ['getChatSections', QUERY_KEYS.INFINITE_CHAT_SECTIONS],
 
     queryFn: ({ pageParam = 1, signal }) =>
       getChatSections({ ...DEFAULT_PAGINATION, current_page: pageParam }, signal),
@@ -178,7 +179,9 @@ export const useCreateChat = () => {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INFINITE_CHAT_SECTIONS] })
+      queryClient.invalidateQueries({
+        queryKey: ['getChatSections', QUERY_KEYS.INFINITE_CHAT_SECTIONS],
+      })
     },
   })
 }
@@ -187,7 +190,7 @@ export const useCreateAnwserQuestion = () => {
   const queryClient = useQueryClient()
   const mutation = useMutation(createAnwserQuestion, {
     onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.INFINITE_MESSAGES])
+      queryClient.invalidateQueries(['getChatSections', QUERY_KEYS.INFINITE_MESSAGES])
     },
     onMutate: (params) => {
       queryClient.setQueryData<InfiniteData<MessagesResponse>>(
@@ -228,4 +231,14 @@ export const useInfoChatSection = (params: InfoChatSectionRequest) => {
     queryKey: ['InfoChatSection', params],
     queryFn: () => getInfoChatSection(params),
   })
+}
+
+export const useDeleteChatSection = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(deleteChatSection, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getChatSections'])
+    },
+  })
+  return mutation
 }

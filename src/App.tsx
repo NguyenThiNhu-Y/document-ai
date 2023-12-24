@@ -19,7 +19,7 @@ function App() {
         <Route path='/' element={<Layout />}>
           <Route index element={<Navigate to='documents' />} />
           <Route path='documents' element={<Documents />} />
-          <Route path='new-chat/:iddocument' element={<ChatSection />} />
+          <Route path='new-chat/:iddchatIDocument' element={<ChatSection />} />
           <Route path='chat/:chatID' element={<ChatSection />} />
           <Route path='mindmaps/:iddocument' element={<Mindmaps />} />
           <Route path='notes' element={<Note />} />

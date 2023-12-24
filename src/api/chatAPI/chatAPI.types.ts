@@ -54,8 +54,8 @@ export interface NewChatResponse extends ChatSection, Message {
 }
 
 export interface NewAnwserQuestionRequest {
-  idchat_section: number,
-  iduser: number,
+  idchat_section: number
+  iduser: number
   question: string
 }
 
@@ -65,4 +65,8 @@ export interface InfoChatSectionRequest {
 
 export interface InfoChatSectionResponse extends ChatSection {
   document_name: number
+}
+
+export interface DeleteChatSectionRequest {
+  idchat_section: number
 }

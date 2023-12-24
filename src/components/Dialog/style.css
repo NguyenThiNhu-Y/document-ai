@@ -1,3 +1,48 @@
 #root {
   position: relative;
 }
+
+.wrapper {
+  padding: 24px;
+}
+
+
+.heading {
+  margin: 0 0 12px;
+  color: #1C2024;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Bai Jamjuree', sans-serif;
+}
+
+.content {
+  margin: 0 0 16px;
+  font-family: 'Bai Jamjuree', sans-serif;
+  font-size: 14px;
+}
+
+.text {
+  font-family: 'Bai Jamjuree', sans-serif;
+  font-size: 14px;
+}
+
+.btn {
+  padding: 6px 12px;
+  border-radius: 2px;
+}
+
+.btnCancle {
+  color: #0007139F;
+  background-color: #00003B0D;
+  margin-right: 12px;
+}
+
+.btnOk {
+  background-color: #5B5BD6;
+  color: white;
+  font-weight: 500;
+}
+
+.div_btn {
+  margin: 16px 0 0 16px;
+}

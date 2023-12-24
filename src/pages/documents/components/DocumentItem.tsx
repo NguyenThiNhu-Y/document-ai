@@ -5,7 +5,7 @@ import { formatDateTime } from '@/utils/datetime'
 import styled from '@emotion/styled'
 import { Button, Card, Dialog, DropdownMenu, Flex, IconButton, Text } from '@radix-ui/themes'
 import prettyBytes from 'pretty-bytes'
-import { forwardRef, ForwardedRef, useMemo, useState } from 'react'
+import { forwardRef, ForwardedRef, useMemo } from 'react'
 import { BiTimeFive } from 'react-icons/bi'
 import { useTheme } from '@emotion/react'
 import { FILE_ICONS } from '@/constants/common'
@@ -44,8 +44,6 @@ const DocumentItem = forwardRef(
       [FILE_TYPES.DOC]: colors.blue9,
       [FILE_TYPES.DOCX]: colors.blue9,
     }[fileType]
-
-    const [dialogOpen, setDialogOpen] = useState(false)
 
     return (
       <CardStyled>
