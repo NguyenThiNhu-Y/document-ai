@@ -49,7 +49,7 @@ const Input: React.FC<InputProps> = ({
           disabled={disabled}
           name={name}
           onChange={onChange}
-          className='px-4 py-3 rounded-lg w-full border'
+          className='px-4 py-2 rounded-sm w-full border text-sm'
         />
       </div>
     )

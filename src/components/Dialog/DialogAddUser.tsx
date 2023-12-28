@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import '@/components/Dialog/style.css'
 import { userAddUserToGroup } from '@/api/authAPI/auth.hooks'
 import toast from 'react-hot-toast'
@@ -17,7 +17,6 @@ type DialogType = {
 }
 const DialogAddUser: React.FC<DialogType> = ({ children, setIsShowDialog, title, value }) => {
   const { chatID = -1 } = useParams()
-  console.log('selectedOptions', value)
   let list_iduser: number[] = []
   if (value) {
     list_iduser = value?.map((user) => {
@@ -51,6 +50,12 @@ const DialogAddUser: React.FC<DialogType> = ({ children, setIsShowDialog, title,
     e.stopPropagation()
   }
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [])
   return (
     <div
       className='fixed top-0 bottom-0 left-0 right-0 z-50'
@@ -58,7 +63,7 @@ const DialogAddUser: React.FC<DialogType> = ({ children, setIsShowDialog, title,
       onClick={handleClose}
     >
       <div
-        className='w-[450px] min-h-[200px] bg-white text-black absolute top-[50%] left-[50%] z-50 rounded-md wrapper'
+        className='w-[450px] min-h-[200px] bg-white text-black absolute top-[50%] left-[50%] z-50 rounded-sm wrapper'
         id='dialog'
         style={{ transform: 'translate(-50%, -50%)' }}
         onClick={handleDialogClick}

@@ -57,7 +57,7 @@ const DialogShare: React.FC<DialogType> = ({ children, setIsShowDialog, title, v
       onClick={handleClose}
     >
       <div
-        className='w-[450px] min-h-[200px] bg-white text-black absolute top-[50%] left-[50%] z-50 rounded-md wrapper'
+        className='w-[450px] min-h-[200px] bg-white text-black absolute top-[50%] left-[50%] z-50 rounded-sm wrapper'
         id='dialog'
         style={{ transform: 'translate(-50%, -50%)' }}
         onClick={handleDialogClick}

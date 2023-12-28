@@ -50,7 +50,11 @@ const UserBottomNavMenu = () => {
       context.setUserData(null)
     }
     navigate('auth')
-    toast.success('Logged out !!!')
+    toast.success('Logged out !!!', {
+      style: {
+        fontSize: '13px',
+      },
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -5,6 +5,7 @@ import {
   deleteUserInGroup,
   getAllUser,
   getUserInGroup,
+  login,
 } from '@/api/authAPI/auth.api'
 
 export const useAllUser = (params: UserRequest) => {
@@ -38,6 +39,17 @@ export const useDeleteUserInGroup = () => {
   const mutation = useMutation(deleteUserInGroup, {
     onSuccess: () => {
       queryClient.invalidateQueries(['getUserInGroup'])
+    },
+  })
+  return mutation
+}
+
+export const useLogin = () => {
+  const queryClient = useQueryClient()
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const mutation = useMutation(login, {
+    onSuccess: () => {
+      queryClient.invalidateQueries()
     },
   })
   return mutation

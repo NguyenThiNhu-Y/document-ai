@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '@/components/Dialog/style.css'
 import { useDeleteChatSection } from '@/api/chatAPI/chatAPI.hooks'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -34,6 +34,12 @@ const Dialog: React.FC<DialogType> = ({ message, setIsShowDialog }) => {
     )
   }
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [])
   return (
     <div
       className='fixed top-0 bottom-0 left-0 right-0'
@@ -41,7 +47,7 @@ const Dialog: React.FC<DialogType> = ({ message, setIsShowDialog }) => {
       onClick={handleClose}
     >
       <div
-        className='w-[450px] bg-white text-black absolute top-[50%] left-[50%] z-50 rounded-md overflow-hidden wrapper'
+        className='w-[450px] bg-white text-black absolute top-[50%] left-[50%] z-50 rounded-sm overflow-hidden wrapper'
         id='dialog'
         style={{ transform: 'translate(-50%, -50%)' }}
         onClick={handleDialogClick}
