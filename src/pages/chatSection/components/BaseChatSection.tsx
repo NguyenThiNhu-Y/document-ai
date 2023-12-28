@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   Flex,
   Heading,
+  IconButton,
   Select as RadixSelect,
   Text,
 } from '@radix-ui/themes'
@@ -16,10 +17,11 @@ import { useInfoChatSection } from '@/api/chatAPI/chatAPI.hooks'
 import { FaUserPlus } from 'react-icons/fa6'
 import { useEffect, useState } from 'react'
 import Select, { MultiValue } from 'react-select'
-import { useAllUser, useGetUserInGroup } from '@/api/authAPI/auth.hooks'
+import { useAllUser, useDeleteUserInGroup, useGetUserInGroup } from '@/api/authAPI/auth.hooks'
 import { useNameDocument } from '@/api/documentAPI/documentAPI.hooks'
 import DialogAddUser from '@/components/Dialog/DialogAddUser'
 import { BiSolidGroup } from 'react-icons/bi'
+import { RxCross2 } from 'react-icons/rx'
 interface BaseChatSectionProps {
   messages: Message[]
   onSubmit: (message: string) => void
@@ -72,7 +74,7 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
 
   const { data: dataUser } = useAllUser({ keyword: '' })
   const { data: dataUserInGroup } = useGetUserInGroup({ idchatsection: +chatID })
-  console.log('data', dataUserInGroup)
+
   let optionList: Option[] = []
   if (dataUser) {
     optionList = dataUser.map((user) => {
@@ -86,6 +88,14 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
 
   const handleChangeInput = (newValue: string) => {
     setKeyword(newValue)
+  }
+
+  const { mutate: mutateDelete } = useDeleteUserInGroup()
+  const onDeleteUser = (iduser: number) => {
+    mutateDelete({
+      idchatsection: +chatID,
+      iduser: iduser,
+    })
   }
 
   return (
@@ -148,7 +158,7 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
               <DropdownMenu.Content>
                 {dataUserInGroup?.map((user, index) => (
                   <>
-                    <DropdownMenuItemStyle disabled={true}>
+                    <Flex m={'2'}>
                       <Avatar
                         fallback={user.username.charAt(0)}
                         src={user.avatar}
@@ -160,7 +170,15 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
                         <Heading size={'1'}>{user.username}</Heading>
                         <Text size={'1'}>{user.email}</Text>
                       </Flex>
-                    </DropdownMenuItemStyle>
+                      <IconButton
+                        size={'1'}
+                        variant='ghost'
+                        m={'2'}
+                        onClick={() => onDeleteUser(user.iduser)}
+                      >
+                        <RxCross2 color={'gray'} />
+                      </IconButton>
+                    </Flex>
                     <DropdownMenu.Separator hidden={index == dataUserInGroup?.length - 1} />
                   </>
                 ))}
@@ -182,7 +200,7 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
           <MemoMessageList messages={messages} isLoading={isLoading} />
         </FlexFullItem>
         <InputWrapper justify={'between'} gap={'3'} align={'center'}>
-          <InputBox onSubmit={onSubmit} isLoading={isLoading} />
+          <InputBox idChatSession={+chatID} onSubmit={onSubmit} isLoading={isLoading} />
         </InputWrapper>
       </Wrapper>
     </>
@@ -227,8 +245,4 @@ const Header = styled.div({
   padding: '10px 0',
 })
 
-const DropdownMenuItemStyle = styled(DropdownMenu.Item)({
-  marginTop: '8px',
-  marginBottom: '8px',
-})
 export default BaseChatSection

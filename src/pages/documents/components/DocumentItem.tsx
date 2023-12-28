@@ -45,6 +45,14 @@ const DocumentItem = forwardRef(
       [FILE_TYPES.DOCX]: colors.blue9,
     }[fileType]
 
+    function formatDateToDDMMYYYY(dateString: string) {
+      const date = new Date(dateString)
+      const day = date.getDate().toString().padStart(2, '0')
+      const month = (date.getMonth() + 1).toString().padStart(2, '0') // Tháng bắt đầu từ 0
+      const year = date.getFullYear()
+      const formattedDate = `${day}.${month}.${year}`
+      return formattedDate
+    }
     return (
       <CardStyled>
         <Flex ref={ref} direction={'column'}>
@@ -60,7 +68,7 @@ const DocumentItem = forwardRef(
             </Flex>
             <Flex gap={'2'} align={'center'} justify={'center'}>
               <Text size={'1'} color='gray'>
-                {formatDateTime(new Date(created))}
+                {formatDateToDDMMYYYY(formatDateTime(new Date(created)))}
               </Text>
               <BiTimeFiveDark size={20} />
             </Flex>

@@ -7,6 +7,7 @@ import { useTheme } from '@emotion/react'
 interface MessageProps extends Message {}
 
 const MessageItem = ({ answer, question }: MessageProps) => {
+  // console.log('message', answer)
   const { colors } = useTheme()
 
   return (

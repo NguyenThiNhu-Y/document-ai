@@ -7,7 +7,10 @@ const ChatSectionViewPage = () => {
   const { chatID = -1 } = useParams()
   const { data, isLoading } = useMessages(+chatID)
 
-  const messages = useMemo(() => data?.pages.flatMap((page) => page.message) ?? [], [data])
+  const messages = useMemo(() => {
+    // console.log('render', data)
+    return data?.pages.flatMap((page) => page.message) ?? []
+  }, [data])
 
   const { mutate } = useCreateAnwserQuestion()
   const newQuestion = (message: string) => {

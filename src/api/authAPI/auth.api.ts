@@ -3,6 +3,7 @@ import {
   AuthParam,
   ResponseAuth,
   UserInGroup,
+  UserInGroupDeleteRequest,
   UserInGroupRequest,
   UserRequest,
   UserRespone,
@@ -31,5 +32,10 @@ export const addUserToGroup = async (body: AddUserToGroup) => {
 
 export const getUserInGroup = async (params: UserInGroupRequest) => {
   const result: UserInGroup[] = await axios.get('/get_user_in_group', { params })
+  return result
+}
+
+export const deleteUserInGroup = async (body: UserInGroupDeleteRequest) => {
+  const result: number = await axios.post('/delete_user_in_group', body)
   return result
 }

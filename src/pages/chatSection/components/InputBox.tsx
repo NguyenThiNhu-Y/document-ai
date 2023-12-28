@@ -2,15 +2,19 @@ import { IconButton } from '@radix-ui/themes'
 import styled from '@emotion/styled'
 import { PiPaperPlaneTiltFill } from 'react-icons/pi'
 import ReactTextareaAutosize from 'react-textarea-autosize'
-import { ChangeEvent, KeyboardEvent, useState } from 'react'
+import { ref, onValue } from 'firebase/database'
+import { ChangeEvent, KeyboardEvent, useState, useEffect } from 'react'
+import { db } from '@/firebase/firebase'
 
 interface InputBoxProps {
   onSubmit: (message: string) => void
   isLoading: boolean
+  idChatSession: number
 }
 
-const InputBox = ({ onSubmit, isLoading }: InputBoxProps) => {
+const InputBox = ({ onSubmit, isLoading, idChatSession }: InputBoxProps) => {
   const [messageValue, setMessageValue] = useState('')
+  const [disableInput, setDisableInput] = useState(false)
   const disabled = !messageValue.length || isLoading
 
   const onMessageValueChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -23,10 +27,25 @@ const InputBox = ({ onSubmit, isLoading }: InputBoxProps) => {
     onSubmit(messageValue)
     setMessageValue('')
   }
+  useEffect(() => {
+    const databaseRef = ref(db, `group_chat/${idChatSession}`)
+
+    const unsubscribe = onValue(databaseRef, (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        setDisableInput(childSnapshot.val())
+      })
+    })
+
+    return () => {
+      unsubscribe()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
       <ResizeInput
+        disabled={disableInput}
         maxRows={5}
         className='input'
         placeholder='Hỏi gì đó....'

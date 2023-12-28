@@ -35,3 +35,19 @@ export interface PinNoteRespone {
 export interface DeleteNoteRequest {
   idnote: number
 }
+
+export interface ShareNoteRequest {
+  idnote: number
+  list_iduser: number[]
+}
+
+export interface UserNoteRequest {
+  idnote: number
+}
+
+export interface UserInNoteResponse {
+  iduser: number
+  username: string
+  email: string
+  avatar: string
+}

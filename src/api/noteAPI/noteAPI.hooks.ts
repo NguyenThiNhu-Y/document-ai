@@ -1,6 +1,13 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { NoteRequest } from "./noteAPI.type"
-import { createNote, deleteNote, getNotes, pinNote } from "./noteAPI.api"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { NoteRequest, UserNoteRequest } from '@/api/noteAPI/noteAPI.type'
+import {
+  createNote,
+  deleteNote,
+  getNotes,
+  getUserInNote,
+  pinNote,
+  shareNote,
+} from '@/api/noteAPI/noteAPI.api'
 import { PAGE_LIMIT } from '@/api/common.constants'
 
 export const useNotes = (params: NoteRequest) => {
@@ -41,4 +48,23 @@ export const useDeleteNote = () => {
     },
   })
   return mutation
+}
+
+export const useShareNote = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const queryClient = useQueryClient()
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const mutation = useMutation(shareNote, {
+    onSuccess: () => {
+      queryClient.invalidateQueries()
+    },
+  })
+  return mutation
+}
+
+export const useGetUserInNote = (params: UserNoteRequest) => {
+  return useQuery({
+    queryKey: ['getUserInNote', params],
+    queryFn: () => getUserInNote(params),
+  })
 }

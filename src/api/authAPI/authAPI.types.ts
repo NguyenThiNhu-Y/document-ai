@@ -40,3 +40,8 @@ export interface UserInGroup {
   email: string
   avatar: string
 }
+
+export interface UserInGroupDeleteRequest {
+  idchatsection: number
+  iduser: number
+}

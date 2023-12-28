@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { UserInGroupRequest, UserRequest } from '@/api/authAPI/authAPI.types'
-import { addUserToGroup, getAllUser, getUserInGroup } from '@/api/authAPI/auth.api'
+import {
+  addUserToGroup,
+  deleteUserInGroup,
+  getAllUser,
+  getUserInGroup,
+} from '@/api/authAPI/auth.api'
 
 export const useAllUser = (params: UserRequest) => {
   return useQuery({
@@ -26,4 +31,14 @@ export const useGetUserInGroup = (params: UserInGroupRequest) => {
     queryKey: ['getUserInGroup', params],
     queryFn: () => getUserInGroup(params),
   })
+}
+
+export const useDeleteUserInGroup = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(deleteUserInGroup, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getUserInGroup'])
+    },
+  })
+  return mutation
 }

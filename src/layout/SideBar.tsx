@@ -8,6 +8,8 @@ import { ChatList } from '@/layout/components/ChatList'
 import { useNavigate } from 'react-router-dom'
 import { PiNotebook } from 'react-icons/pi'
 import { useNameDocument } from '@/api/documentAPI/documentAPI.hooks'
+import { FaBell } from 'react-icons/fa'
+
 // import { createPortal } from 'react-dom'
 // import { DialogCustom } from '@/components/Dialog'
 
@@ -31,7 +33,15 @@ const SideBar = () => {
   return (
     <GridStyled rows={'auto 1fr auto'} columns={'1'} position={'sticky'} top={'0'}>
       <Box px={'4'} py='5'>
-        <Heading size={'3'}>Document AI</Heading>
+        <Flex>
+          <Heading size={'3'}>Document AI</Heading>
+          <Flex ml={'auto'} gap={'5'}>
+            <button style={{ position: 'relative' }}>
+              <FaBell size={14} />
+              <NotifyCount>1</NotifyCount>
+            </button>
+          </Flex>
+        </Flex>
       </Box>
       <Flex direction={'column'} p={'4'} pt={'0'} gap={'1'}>
         <NavLink to={'/documents'}>
@@ -97,6 +107,20 @@ const GridStyled = styled(Grid)((props) => ({
 const FlexItem = styled.div({
   flex: 1,
   paddingLeft: '16px',
+})
+
+const NotifyCount = styled.span({
+  position: 'absolute',
+  top: -1,
+  left: 5,
+  backgroundColor: 'red',
+  color: 'white',
+  borderRadius: '50%',
+  fontSize: '7px',
+  fontWeight: 'bold',
+  width: '11px',
+  height: '11px',
+  justifyContent: 'center',
 })
 
 export default SideBar

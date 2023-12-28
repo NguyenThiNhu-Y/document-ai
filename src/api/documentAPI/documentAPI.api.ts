@@ -7,7 +7,7 @@ import {
   DocumentDeleteRequest,
   NameDocumentRequest,
   NameDocumentResponse,
-  IdDocumentRequest
+  IdDocumentRequest,
 } from '@/api/documentAPI/documentAPI.types'
 
 export const getDocuments = async (params: DocumentRequest) => {
@@ -16,7 +16,7 @@ export const getDocuments = async (params: DocumentRequest) => {
 }
 
 export const getDocumentSummary = async (params: DocumentSummaryRequest) => {
-  const result: DocumentSummary[] = await axios.get('/get_summary/'+ params.iddocument)
+  const result: DocumentSummary[] = await axios.get('/get_summary/' + params.iddocument)
   return result
 }
 
@@ -25,14 +25,14 @@ export const deleteDocument = async (params: DocumentDeleteRequest) => {
   return result
 }
 
-export const uploadDocument = async (files: FormData) => {
+export const uploadDocument = async ({ files, idUser }: { files: FormData; idUser: number }) => {
   const config = {
     headers: {
       'content-type': 'multipart/form-data',
     },
   }
-  await axios.post('/upload-files', files, config)
-  return "ok"
+  await axios.post(`/upload-files/${'' + idUser}`, files, config)
+  return 'ok'
 }
 
 export const getNameDocument = async (params: NameDocumentRequest) => {

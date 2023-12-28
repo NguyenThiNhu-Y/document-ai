@@ -30,7 +30,10 @@ const DocumentsHeader: React.FC<DocumentsHeaderType> = ({ searchKeyword, handleS
       for (const file of files) {
         formData.append('files', file)
       }
-      mutate(formData)
+
+      const idUser = 1
+
+      mutate({ files: formData, idUser: idUser })
     }
   }
 
@@ -49,9 +52,7 @@ const DocumentsHeader: React.FC<DocumentsHeaderType> = ({ searchKeyword, handleS
               onChange={handleSearchChange}
             />
           </TextField.Root>
-          <Button>
-            <Text mr={'2'}>Tìm kiếm</Text>
-          </Button>
+
           <input
             type='file'
             multiple
