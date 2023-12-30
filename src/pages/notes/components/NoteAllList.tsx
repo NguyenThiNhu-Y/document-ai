@@ -6,7 +6,7 @@ import { useNotes } from '@/api/noteAPI/noteAPI.hooks'
 import { useInView } from 'react-intersection-observer'
 import { Ring } from '@uiball/loaders'
 import { useTheme } from '@emotion/react'
-import NoteItem from './NoteItem'
+import NoteItem from '@/pages/notes/components/NoteItem'
 
 export const NoteAllList = () => {
   const [pagination] = useState<NoteRequest>(DEFAULT_PAGINATION)

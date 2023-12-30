@@ -25,14 +25,18 @@ const DialogAddUser: React.FC<DialogType> = ({ children, setIsShowDialog, title,
   }
 
   const { mutate } = userAddUserToGroup()
+  const idUser = localStorage.getItem('DOCUMENT_AI_USER')
   const onAddUserToGroup = () => {
-    mutate(
-      {
-        idchatsection: +chatID,
-        list_iduser: list_iduser,
-      },
-      { onSuccess: onSuccess }
-    )
+    if (idUser) {
+      mutate(
+        {
+          iduseradd: +idUser,
+          idchatsection: +chatID,
+          list_iduser: list_iduser,
+        },
+        { onSuccess: onSuccess }
+      )
+    }
   }
   const onSuccess = () => {
     handleClose()

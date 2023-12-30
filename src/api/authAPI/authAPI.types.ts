@@ -26,6 +26,7 @@ export interface UserRespone {
 }
 
 export interface AddUserToGroup {
+  iduseradd: number
   idchatsection: number
   list_iduser: number[]
 }

@@ -12,6 +12,7 @@ import { FaRegFileLines, FaTruckPlane } from 'react-icons/fa6'
 import DialogChooseFile from '@/components/Dialog/DailogChooseFile'
 import { toast } from 'react-hot-toast'
 import Loading from '@/pages/loading/Loading'
+import '@/components/Dialog/style.css'
 
 type DocumentsHeaderType = {
   searchKeyword?: string
@@ -120,9 +121,12 @@ const DocumentsHeader: React.FC<DocumentsHeaderType> = ({ searchKeyword, handleS
                     </>
                   ) : (
                     <>
-                      <label htmlFor='chooseFile' className='flex items-center flex-col '>
+                      <label
+                        htmlFor='chooseFile'
+                        className='flex text-main-color items-center flex-col '
+                      >
                         <IoCloudUpload fontSize={56} />
-                        <h5 className='font-semibold'>Drop or select file</h5>
+                        <h5 className='font-semibold text-black'>Kéo thả hoặc chọn tài liệu</h5>
                       </label>
                       <input
                         type='file'
@@ -137,16 +141,16 @@ const DocumentsHeader: React.FC<DocumentsHeaderType> = ({ searchKeyword, handleS
                 </div>
                 <div className='mt-4 flex justify-end gap-2'>
                   <button
-                    className='px-4 py-2 rounded-sm font-semibold border'
+                    className='px-4 py-2 rounded-sm font-semibold border btnCancle'
                     onClick={() => setSelectedFile([])}
                   >
-                    Clear
+                    Làm mới
                   </button>
                   <button
-                    className='px-4 py-2 rounded-sm font-semibold border bg-orange-400 hover:bg-orange-600'
+                    className='px-4 py-2 rounded-sm font-semibold border btnOk'
                     onClick={handleSubmit}
                   >
-                    Submit
+                    Tải lên
                   </button>
                 </div>
               </div>

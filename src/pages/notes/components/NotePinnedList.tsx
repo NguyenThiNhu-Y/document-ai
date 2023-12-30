@@ -5,7 +5,7 @@ import { Grid, Flex } from '@radix-ui/themes'
 import { Ring } from '@uiball/loaders'
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import NoteItem from './NoteItem'
+import NoteItem from '@/pages/notes/components/NoteItem'
 
 export const NotePinnedList = () => {
   const [pagination] = useState<NoteRequest>({

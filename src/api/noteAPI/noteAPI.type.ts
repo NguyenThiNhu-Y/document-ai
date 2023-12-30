@@ -37,6 +37,7 @@ export interface DeleteNoteRequest {
 }
 
 export interface ShareNoteRequest {
+  iduseradd: number
   idnote: number
   list_iduser: number[]
 }

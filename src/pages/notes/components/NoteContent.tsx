@@ -1,12 +1,8 @@
 import styled from '@emotion/styled'
-import { NoteEditor } from './NoteEditor'
+// import { NoteEditor } from './NoteEditor'
 
 export const NoteContent = () => {
-  return (
-    <Container>
-      <NoteEditor />
-    </Container>
-  )
+  return <Container>{/* <NoteEditor /> */}</Container>
 }
 
 const Container = styled.div({

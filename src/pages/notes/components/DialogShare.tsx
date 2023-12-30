@@ -25,14 +25,18 @@ const DialogShare: React.FC<DialogType> = ({ children, setIsShowDialog, title, v
   }
 
   const { mutate } = useShareNote()
+  const idUser = localStorage.getItem('DOCUMENT_AI_USER')
   const onShareNote = (idnote: number) => {
-    mutate(
-      {
-        idnote: +idnote,
-        list_iduser: list_iduser,
-      },
-      { onSuccess: onSuccess }
-    )
+    if (idUser) {
+      mutate(
+        {
+          iduseradd: +idUser,
+          idnote: +idnote,
+          list_iduser: list_iduser,
+        },
+        { onSuccess: onSuccess }
+      )
+    }
   }
   const onSuccess = () => {
     handleClose()

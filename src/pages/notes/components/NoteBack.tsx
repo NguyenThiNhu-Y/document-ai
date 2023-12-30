@@ -1,3 +1,3 @@
 export const NoteBack = () => {
-  return <p>Quay laij</p>
+  return <p>Quay lại</p>
 }
