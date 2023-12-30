@@ -27,6 +27,7 @@ import {
   useGetAllNotify,
   useGetNotifyIsNoteRead,
   useUpdateNoityIsClick,
+  useUpdateNoityIsRead,
 } from '@/api/notifyAPI/notifyAPI.hooks'
 import { DEFAULT_PAGINATION } from '@/constants/common'
 import { useTheme } from '@emotion/react'
@@ -68,17 +69,24 @@ const SideBar = () => {
       navigate('/chat/' + id_chatsection)
     }
   }
+
+  const { mutate: mutateNotifyIsRead } = useUpdateNoityIsRead()
+  const onReadNotify = () => {
+    mutateNotifyIsRead({ iduser: iduser })
+  }
   return (
     <GridStyled rows={'auto 1fr auto'} columns={'1'} position={'sticky'} top={'0'}>
       <Box px={'4'} py='5'>
         <Flex>
           <Heading size={'3'}>Document AI</Heading>
           <Flex ml={'auto'} gap={'5'}>
-            <DropdownMenu.Root>
+            <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger>
-                <button style={{ position: 'relative' }}>
+                <button style={{ position: 'relative' }} onClick={onReadNotify}>
                   <FaBell size={14} />
-                  {dataNotityIsNoteRead && <NotifyCount>{dataNotityIsNoteRead}</NotifyCount>}
+                  {dataNotityIsNoteRead && dataNotityIsNoteRead > 0 && (
+                    <NotifyCount>{dataNotityIsNoteRead}</NotifyCount>
+                  )}
                 </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content>
