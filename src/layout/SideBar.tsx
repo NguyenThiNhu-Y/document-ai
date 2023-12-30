@@ -12,10 +12,12 @@ import {
   Select,
   Text,
 } from '@radix-ui/themes'
+import { db } from '@/firebase/firebase'
+import { ref, onValue } from 'firebase/database'
 import { ChatBubbleIcon, FileTextIcon, PlusIcon } from '@radix-ui/react-icons'
 import UserBottomNav from '@/layout/components/UserBottomNav'
 import NavLink from '@/layout/components/NavLink'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { ChatList } from '@/layout/components/ChatList'
 import { useNavigate } from 'react-router-dom'
 import { PiNotebook } from 'react-icons/pi'
@@ -25,21 +27,19 @@ import { RxCross2 } from 'react-icons/rx'
 import { NotifyRequest } from '@/api/notifyAPI/notifyAPI.types'
 import {
   useGetAllNotify,
-  useGetNotifyIsNoteRead,
   useUpdateNoityIsClick,
   useUpdateNoityIsRead,
 } from '@/api/notifyAPI/notifyAPI.hooks'
+import { useEffect } from 'react'
 import { DEFAULT_PAGINATION } from '@/constants/common'
 import { useTheme } from '@emotion/react'
-
-// import { createPortal } from 'react-dom'
-// import { DialogCustom } from '@/components/Dialog'
+import { APP_CONTEXT } from '@/context'
 
 const SideBar = () => {
+  const context = useContext(APP_CONTEXT)
+  const [quantityNotification, setQuantityNotification] = useState(0)
   const { colors } = useTheme()
   const navigate = useNavigate()
-  // const portalContainer = document.getElementById('root')
-  // const [isShowDialog, setIsShowDialog] = useState(false)
   const [selectedDocId, setSelectedDocId] = useState(-1)
   const iduser = localStorage.getItem('DOCUMENT_AI_USER')
     ? Number(localStorage.getItem('DOCUMENT_AI_USER'))
@@ -56,9 +56,8 @@ const SideBar = () => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [pagination, setPagination] = useState<NotifyRequest>(DEFAULT_PAGINATION)
+  const [pagination] = useState<NotifyRequest>(DEFAULT_PAGINATION)
   const { data: dataNotify } = useGetAllNotify(pagination)
-  const { data: dataNotityIsNoteRead } = useGetNotifyIsNoteRead({ iduser: iduser })
 
   const { mutate: mutateNotifyIsClick } = useUpdateNoityIsClick()
 
@@ -74,6 +73,20 @@ const SideBar = () => {
   const onReadNotify = () => {
     mutateNotifyIsRead({ iduser: iduser })
   }
+  useEffect(() => {
+    if (context.userData?.iduser) {
+      const databaseRef = ref(db, `notify/${context.userData?.iduser}`)
+      const unsubscribe = onValue(databaseRef, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          setQuantityNotification(childSnapshot.val())
+        })
+      })
+      return () => {
+        unsubscribe()
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <GridStyled rows={'auto 1fr auto'} columns={'1'} position={'sticky'} top={'0'}>
       <Box px={'4'} py='5'>
@@ -84,9 +97,7 @@ const SideBar = () => {
               <DropdownMenu.Trigger>
                 <button style={{ position: 'relative' }} onClick={onReadNotify}>
                   <FaBell size={14} />
-                  {dataNotityIsNoteRead && dataNotityIsNoteRead > 0 && (
-                    <NotifyCount>{dataNotityIsNoteRead}</NotifyCount>
-                  )}
+                  {quantityNotification > 0 && <NotifyCount>{quantityNotification}</NotifyCount>}
                 </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content>
