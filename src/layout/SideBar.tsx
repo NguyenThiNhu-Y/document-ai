@@ -4,7 +4,7 @@ import {
   Box,
   Button,
   Dialog,
-  // DropdownMenu,
+  DropdownMenu,
   Flex,
   Grid,
   Heading,
@@ -68,68 +68,13 @@ const SideBar = () => {
       navigate('/chat/' + id_chatsection)
     }
   }
-  const [isMenuOpen, setIsMenuOpen] = useState(true)
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
   return (
     <GridStyled rows={'auto 1fr auto'} columns={'1'} position={'sticky'} top={'0'}>
       <Box px={'4'} py='5'>
         <Flex>
           <Heading size={'3'}>Document AI</Heading>
-          <Flex ml={'auto'} gap={'5'} style={{ position: 'relative' }}>
-            <button onClick={toggleMenu}>
-              <FaBell size={14} />
-              {dataNotityIsNoteRead && <NotifyCount>{dataNotityIsNoteRead}</NotifyCount>}
-            </button>
-            {isMenuOpen && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  // left: 0,
-                  width: '380px',
-                  backgroundColor: '#fff', // Set your desired background color
-                  border: '1px solid #ccc', // Add border for better appearance
-                  borderRadius: '4px', // Adjust border radius as needed
-                  zIndex: 9999, // Set a higher z-index to make sure it's above other elements
-                  padding: '8px', // Add padding for better spacing
-                  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for a lifted look
-                }}
-              >
-                {dataNotify?.pages.map((page) =>
-                  page.notifies.map((notify) => (
-                    <CenteredFlex>
-                      <DivNotifyStyle
-                        style={{ backgroundColor: notify.isclick == 0 ? colors.irisA3 : '' }}
-                        onClick={() => {
-                          onClickNotify(notify.idchatsection, notify.idnote, notify.idnotify)
-                        }}
-                      >
-                        <Avatar
-                          fallback=''
-                          src={notify.avatar_useradd}
-                          variant={'soft'}
-                          radius='full'
-                          mr={'2'}
-                          style={{ width: '30px', height: '30px' }}
-                        />
-                        <Text className='break-all' size={'1'}>
-                          <strong>{notify.username_useradd + ' '}</strong>
-                          <span>{notify.content}</span>
-                        </Text>
-                        <IconButton size={'1'} variant='ghost' m={'2'}>
-                          <RxCross2 size={'12'} color={'gray'} />
-                        </IconButton>
-                      </DivNotifyStyle>
-                    </CenteredFlex>
-                  ))
-                )}
-              </div>
-            )}
-
-            {/* <DropdownMenu.Root>
+          <Flex ml={'auto'} gap={'5'}>
+            <DropdownMenu.Root>
               <DropdownMenu.Trigger>
                 <button style={{ position: 'relative' }}>
                   <FaBell size={14} />
@@ -168,7 +113,7 @@ const SideBar = () => {
                   ))
                 )}
               </DropdownMenu.Content>
-            </DropdownMenu.Root> */}
+            </DropdownMenu.Root>
           </Flex>
         </Flex>
       </Box>
@@ -257,11 +202,10 @@ const NotifyCount = styled.span({
 const CenteredFlex = styled.div({
   display: 'flex',
   marginBottom: 8,
-  // alignItems: 'center',
+  alignItems: 'center',
 })
 
 const DivNotifyStyle = styled.button((props) => ({
-  maxWidth: '300px',
   padding: 2,
   '&:hover': {
     backgroundColor: props.theme.colors.irisA3,
