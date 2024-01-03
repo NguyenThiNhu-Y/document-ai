@@ -1,6 +1,6 @@
 import { Container } from '@radix-ui/themes'
-import NotesHeader from './components/NotesHeader'
-import { NoteTab } from './components/NoteTab'
+import NotesHeader from '@/pages/notes/components/NotesHeader'
+import { NoteTab } from '@/pages/notes/components/NoteTab'
 
 const Note = () => {
   return (
@@ -10,10 +10,5 @@ const Note = () => {
     </Container>
   )
 }
-
-// const Container = styled.div({
-//   display: 'grid',
-//   gridTemplateColumns: '1fr 240px',
-// })
 
 export default Note

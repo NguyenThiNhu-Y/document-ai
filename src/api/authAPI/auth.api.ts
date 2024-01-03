@@ -21,7 +21,7 @@ export const loginGG = async (params: AuthParam) => {
 }
 
 export const getAllUser = async (params: UserRequest) => {
-  const result: UserRespone[] = await axios.get('/get_all_user', { params })
+  const result: UserRespone[] = await axios.get('/get_all_user_group', { params })
   return result
 }
 

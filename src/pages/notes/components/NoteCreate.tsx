@@ -14,13 +14,16 @@ const NoteCreate = () => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const { mutate } = useCreateNote()
+  const iduser = localStorage.getItem('DOCUMENT_AI_USER')
+    ? Number(localStorage.getItem('DOCUMENT_AI_USER'))
+    : 0
 
   const onChangTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value)
   }
   const onCreateNote = () => {
     mutate({
-      iduser: 1,
+      iduser: iduser,
       title: title,
       content: content,
     })

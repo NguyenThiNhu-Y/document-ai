@@ -8,6 +8,9 @@ const nanoid = customAlphabet('1234567890', 10)
 
 const NewChatSectionPage = () => {
   const { iddocument = -1 } = useParams()
+  const iduser = localStorage.getItem('DOCUMENT_AI_USER')
+    ? Number(localStorage.getItem('DOCUMENT_AI_USER'))
+    : 0
 
   const tmpChatID = useRef(+nanoid()).current
 
@@ -19,11 +22,11 @@ const NewChatSectionPage = () => {
 
   const createNewChatSection = (message: string) => {
     mutate({
-      iduser: 1,
+      iduser: iduser,
       idchat_section: tmpChatID,
       name: 'Cuộc trò chuyện mới - ' + message,
       question: message,
-      iddocument: +iddocument
+      iddocument: +iddocument,
     })
   }
 

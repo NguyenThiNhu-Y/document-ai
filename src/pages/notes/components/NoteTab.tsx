@@ -1,7 +1,7 @@
 import { Tabs } from '@radix-ui/themes'
-import { NoteAllList } from './NoteAllList'
-import { NoteSharedList } from './NoteSharedList'
-import { NotePinnedList } from './NotePinnedList'
+import { NoteAllList } from '@/pages/notes/components/NoteAllList'
+import { NoteSharedList } from '@/pages/notes/components/NoteSharedList'
+import { NotePinnedList } from '@/pages/notes/components/NotePinnedList'
 
 export const NoteTab = () => {
   return (
@@ -28,4 +28,3 @@ export const NoteTab = () => {
     </div>
   )
 }
-

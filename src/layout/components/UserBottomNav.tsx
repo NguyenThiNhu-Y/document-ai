@@ -8,27 +8,39 @@ import { useNavigate } from 'react-router-dom'
 
 const UserBottomNav = () => {
   const context = useContext(APP_CONTEXT)
+  // Retrieve the JSON string from localStorage
+  const storedUserInfoString = localStorage.getItem('DOCUMENT_AI_USER_INFO')
+
+  let username = ''
+  let avatar = ''
+  let email = ''
+  if (context.userData) {
+    username = context.userData.username
+    avatar = context.userData.avatar
+    email = context.userData.email
+  }
+
+  if (storedUserInfoString) {
+    // Convert the JSON string to an object
+    const storedUserInfo = JSON.parse(storedUserInfoString)
+    username = storedUserInfo.username
+    avatar = storedUserInfo.avatar
+    email = storedUserInfo.email
+  }
   return (
     <Flex p={'4'} gap={'2'} align={'center'}>
-      {context.userData && (
-        <>
-          {context.userData.avatar ? (
-            <Avatar
-              fallback={context.userData.username.charAt(0)}
-              src={context.userData.avatar}
-              alt={context.userData.username}
-              radius='full'
-            />
-          ) : (
-            <Avatar fallback={context.userData.username.charAt(0)} variant={'soft'} />
-          )}
+      <>
+        {avatar ? (
+          <Avatar fallback={username.charAt(0)} src={avatar} alt={username} radius='full' />
+        ) : (
+          <Avatar fallback={username.charAt(0)} variant={'soft'} />
+        )}
 
-          <Flex direction={'column'} mr={'auto'}>
-            <Heading size={'1'}>{context.userData.username}</Heading>
-            <Text size={'1'}>{context.userData.email}</Text>
-          </Flex>
-        </>
-      )}
+        <Flex direction={'column'} mr={'auto'}>
+          <Heading size={'1'}>{username}</Heading>
+          <Text size={'1'}>{email}</Text>
+        </Flex>
+      </>
 
       <UserBottomNavMenu />
     </Flex>
@@ -48,6 +60,8 @@ const UserBottomNavMenu = () => {
   const handleLogout = useCallback(() => {
     if (context.setUserData) {
       context.setUserData(null)
+      localStorage.removeItem('DOCUMENT_AI_USER_INFO')
+      localStorage.removeItem('DOCUMENT_AI_USER')
     }
     navigate('auth')
     toast.success('Logged out !!!', {

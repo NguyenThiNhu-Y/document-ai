@@ -70,3 +70,7 @@ export interface InfoChatSectionResponse extends ChatSection {
 export interface DeleteChatSectionRequest {
   idchat_section: number
 }
+
+export interface HaveNewChatSection {
+  iduser: number
+}

@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import {
   createNotifyChatsection,
   createNotifyNote,
+  deleteNotify,
   getAllNotify,
   getNotifyIsNoteRead,
   updateNotifyIsClick,
@@ -63,6 +64,16 @@ export const useUpdateNoityIsRead = () => {
 export const useUpdateNoityIsClick = () => {
   const queryClient = useQueryClient()
   const mutation = useMutation(updateNotifyIsClick, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getNotifies'])
+    },
+  })
+  return mutation
+}
+
+export const useDeleteNotity = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(deleteNotify, {
     onSuccess: () => {
       queryClient.invalidateQueries(['getNotifies'])
     },

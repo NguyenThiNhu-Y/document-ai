@@ -11,9 +11,17 @@ import { Ring } from '@uiball/loaders'
 import { useTheme } from '@emotion/react'
 import { DialogCustom } from '@/components/Dialog'
 import { createPortal } from 'react-dom'
+import { PAGE_LIMIT } from '@/api/common.constants'
 
 export const ChatList = () => {
-  const { data, hasNextPage, fetchNextPage, isFetching, isFetchingNextPage } = useChatSections()
+  const iduser = localStorage.getItem('DOCUMENT_AI_USER')
+    ? Number(localStorage.getItem('DOCUMENT_AI_USER'))
+    : 0
+  const { data, hasNextPage, fetchNextPage, isFetching, isFetchingNextPage } = useChatSections({
+    iduser: iduser,
+    current_page: 1,
+    page_size: PAGE_LIMIT,
+  })
   const { colors } = useTheme()
   const [isShowDialog, setIsShowDialog] = useState(false)
 

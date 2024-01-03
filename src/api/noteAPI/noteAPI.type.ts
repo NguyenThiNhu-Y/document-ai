@@ -40,6 +40,7 @@ export interface ShareNoteRequest {
   iduseradd: number
   idnote: number
   list_iduser: number[]
+  isedit: number
 }
 
 export interface UserNoteRequest {
@@ -51,4 +52,29 @@ export interface UserInNoteResponse {
   username: string
   email: string
   avatar: string
+}
+
+export interface ViewEditNoteRequest {
+  idnote: number
+}
+
+export interface UpdateNoteRequest {
+  idnote: number
+  title: string
+  content: string
+}
+
+export interface UserInNoteRequest {
+  idnote: number
+  iduser: number
+}
+
+export interface UserNotInNoteRequest {
+  keyword: string
+  idnote: number
+}
+
+export interface UserInNoteRespone {
+  iduser: number
+  email: string
 }

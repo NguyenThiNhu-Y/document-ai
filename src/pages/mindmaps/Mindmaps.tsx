@@ -8,21 +8,19 @@ import ReactFlow, {
   Node,
   useReactFlow,
   NodeOrigin,
-  ConnectionLineType,
   Edge,
 } from 'reactflow'
 
 import styled from '@emotion/styled'
 
-import useStore from './store'
-import MindMapNode from './components/MindMapNode'
-import MindMapEdge from './components/MindMapEdge'
+import useStore from '@/pages/mindmaps/store'
+import MindMapNode from '@/pages/mindmaps/components/MindMapNode'
+import MindMapEdge from '@/pages/mindmaps/components/MindMapEdge'
 
 // we need to import the React Flow styles to make it work
 import 'reactflow/dist/style.css'
 import { useParams } from 'react-router-dom'
 import { useMindMap } from '@/api/mindmapAPI/mindmapAPI.hooks'
-import { type } from 'os'
 
 const nodeTypes = {
   mindmap: MindMapNode,
@@ -41,6 +39,7 @@ function Flow() {
   const { nodes, edges, onNodesChange, onEdgesChange, addChildNode, initNodes } = useStore()
   const connectingNodeId = useRef<string | null>(null)
   const store = useStoreApi()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { project, fitView } = useReactFlow()
 
   const getChildNodePosition = (event: MouseEvent, parentNode?: Node) => {

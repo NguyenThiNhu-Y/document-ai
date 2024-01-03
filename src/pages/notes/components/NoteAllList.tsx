@@ -1,7 +1,6 @@
 import { NoteRequest } from '@/api/noteAPI/noteAPI.type'
 import { Flex, Grid } from '@radix-ui/themes'
 import { useEffect, useState } from 'react'
-import { DEFAULT_PAGINATION } from '@/constants/common'
 import { useNotes } from '@/api/noteAPI/noteAPI.hooks'
 import { useInView } from 'react-intersection-observer'
 import { Ring } from '@uiball/loaders'
@@ -9,7 +8,12 @@ import { useTheme } from '@emotion/react'
 import NoteItem from '@/pages/notes/components/NoteItem'
 
 export const NoteAllList = () => {
-  const [pagination] = useState<NoteRequest>(DEFAULT_PAGINATION)
+  const idUser = localStorage.getItem('DOCUMENT_AI_USER')
+  const [pagination] = useState<NoteRequest>({
+    iduser: idUser ? +idUser : 0,
+    current_page: 1,
+    page_size: 10,
+  })
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = useNotes(pagination)
 
   const { ref, inView } = useInView()

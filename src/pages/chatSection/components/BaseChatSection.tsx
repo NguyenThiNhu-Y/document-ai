@@ -56,7 +56,9 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
   }
 
   const [selectedDocId, setSelectedDocId] = useState(iddocument)
-  const iduser = 1
+  const iduser = localStorage.getItem('DOCUMENT_AI_USER')
+    ? Number(localStorage.getItem('DOCUMENT_AI_USER'))
+    : 0
   const { data: documents } = useNameDocument({ iduser: iduser })
   const handleChangeDocId = (value: string) => {
     setSelectedDocId(+value)
@@ -72,7 +74,7 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
 
   const [keyword, setKeyword] = useState<string>('')
 
-  const { data: dataUser } = useAllUser({ keyword: '' })
+  const { data: dataUser } = useAllUser({ keyword: '', idchatsection: +chatID })
   const { data: dataUserInGroup } = useGetUserInGroup({ idchatsection: +chatID })
 
   let optionList: Option[] = []

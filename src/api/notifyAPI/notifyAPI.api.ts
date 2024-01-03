@@ -1,5 +1,6 @@
 import {
   NotifyChatSectionRequest,
+  NotifyDeleteRequest,
   NotifyIsClickRequest,
   NotifyIsReadRequest,
   NotifyNoteRequest,
@@ -35,5 +36,10 @@ export const updateNotifyIsRead = async (params: NotifyIsReadRequest) => {
 
 export const updateNotifyIsClick = async (params: NotifyIsClickRequest) => {
   const result: number = await axios.put('/update_isclick', params)
+  return result
+}
+
+export const deleteNotify = async (params: NotifyDeleteRequest) => {
+  const result: number = await axios.put('/delete_notify', params)
   return result
 }

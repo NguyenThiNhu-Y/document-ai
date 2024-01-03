@@ -13,24 +13,26 @@ import {
   getChatMessages,
   getChatSections,
   getInfoChatSection,
+  updateHaveNewChatSection,
 } from '@/api/chatAPI/chatAPI.api'
 import { QUERY_KEYS } from '@/api/common.enums'
 import { DEFAULT_PAGINATION } from '@/constants/common'
 import { PAGE_LIMIT } from '@/api/common.constants'
 import { queryClient } from '@/api/QueryProvider'
 import {
+  ChatSectionRequest,
   ChatSectionResponse,
   InfoChatSectionRequest,
   MessagesResponse,
   NewChatRequestWithTmpChatId,
 } from '@/api/chatAPI/chatAPI.types'
 
-export const useChatSections = () => {
+export const useChatSections = (params: ChatSectionRequest) => {
   return useInfiniteQuery({
     queryKey: ['getChatSections', QUERY_KEYS.INFINITE_CHAT_SECTIONS],
 
     queryFn: ({ pageParam = 1, signal }) =>
-      getChatSections({ ...DEFAULT_PAGINATION, current_page: pageParam }, signal),
+      getChatSections({ ...params, current_page: pageParam }, signal),
 
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.chat_sections.length === PAGE_LIMIT ? allPages.length + 1 : undefined
@@ -74,7 +76,7 @@ export const useUpdateChatSectionName = () => {
       return { previousChatSections }
     },
 
-    onError: (err, newTodo, context) => {
+    onError: (_err, _newTodo, context) => {
       queryClient.setQueryData<InfiniteData<ChatSectionResponse>>(
         [QUERY_KEYS.INFINITE_CHAT_SECTIONS],
         (old) => (context ? context.previousChatSections : old)
@@ -236,6 +238,16 @@ export const useInfoChatSection = (params: InfoChatSectionRequest) => {
 export const useDeleteChatSection = () => {
   const queryClient = useQueryClient()
   const mutation = useMutation(deleteChatSection, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getChatSections'])
+    },
+  })
+  return mutation
+}
+
+export const useUpdateHaveNewChatSection = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(updateHaveNewChatSection, {
     onSuccess: () => {
       queryClient.invalidateQueries(['getChatSections'])
     },

@@ -18,6 +18,7 @@ export interface ResponseAuth {
 
 export interface UserRequest {
   keyword: string
+  idchatsection: number
 }
 
 export interface UserRespone {

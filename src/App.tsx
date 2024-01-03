@@ -10,6 +10,7 @@ import Auth from '@/pages/auth/Auth'
 import { Toaster } from 'react-hot-toast'
 import { AppProvider } from '@/context'
 import '@/app.css'
+import NoteViewEdit from '@/pages/notes/components/NoteViewEdit'
 
 function App() {
   return (
@@ -19,11 +20,12 @@ function App() {
         <Route path='/' element={<Layout />}>
           <Route index element={<Navigate to='documents' />} />
           <Route path='documents' element={<Documents />} />
-          <Route path='new-chat/:iddchatIDocument' element={<ChatSection />} />
+          <Route path='new-chat/:iddocument' element={<ChatSection />} />
           <Route path='chat/:chatID' element={<ChatSection />} />
           <Route path='mindmaps/:iddocument' element={<Mindmaps />} />
           <Route path='notes' element={<Note />} />
           <Route path='create-note' element={<NoteCreate />} />
+          <Route path='notes/:idNote' element={<NoteViewEdit />} />
           <Route path='summary/:iddocument' element={<DocumentSummary />} />
         </Route>
         <Route path='auth' element={<Auth />} />

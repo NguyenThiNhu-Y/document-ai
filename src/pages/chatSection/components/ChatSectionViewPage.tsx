@@ -6,6 +6,9 @@ import { useParams } from 'react-router-dom'
 const ChatSectionViewPage = () => {
   const { chatID = -1 } = useParams()
   const { data, isLoading } = useMessages(+chatID)
+  const iduser = localStorage.getItem('DOCUMENT_AI_USER')
+    ? Number(localStorage.getItem('DOCUMENT_AI_USER'))
+    : 0
 
   const messages = useMemo(() => {
     // console.log('render', data)
@@ -16,7 +19,7 @@ const ChatSectionViewPage = () => {
   const newQuestion = (message: string) => {
     mutate({
       idchat_section: Number(chatID),
-      iduser: 1,
+      iduser: iduser,
       question: message,
     })
   }

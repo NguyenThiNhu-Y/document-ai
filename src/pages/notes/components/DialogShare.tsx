@@ -1,7 +1,8 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 import '@/components/Dialog/style.css'
 import toast from 'react-hot-toast'
 import { useShareNote } from '@/api/noteAPI/noteAPI.hooks'
+import { Flex, RadioGroup, Text } from '@radix-ui/themes'
 
 interface Option {
   value: string
@@ -16,8 +17,9 @@ type DialogType = {
   idnote: number
 }
 const DialogShare: React.FC<DialogType> = ({ children, setIsShowDialog, title, value, idnote }) => {
-  console.log('selectedOptions', value)
   let list_iduser: number[] = []
+  const [isedit, setIsEdit] = useState<number>(0)
+
   if (value) {
     list_iduser = value?.map((user) => {
       return +user.value
@@ -33,6 +35,7 @@ const DialogShare: React.FC<DialogType> = ({ children, setIsShowDialog, title, v
           iduseradd: +idUser,
           idnote: +idnote,
           list_iduser: list_iduser,
+          isedit: isedit,
         },
         { onSuccess: onSuccess }
       )
@@ -54,6 +57,9 @@ const DialogShare: React.FC<DialogType> = ({ children, setIsShowDialog, title, v
     e.stopPropagation()
   }
 
+  const handleChangeRadio = (value: string) => {
+    setIsEdit(+value)
+  }
   return (
     <div
       className='fixed top-0 bottom-0 left-0 right-0 z-50'
@@ -70,6 +76,20 @@ const DialogShare: React.FC<DialogType> = ({ children, setIsShowDialog, title, v
           <h1 className='heading'>Chia sẻ ghi chú</h1>
           <p className='content'>{title}</p>
         </div>
+        <RadioGroup.Root value={String(isedit)} mb={'4'} onValueChange={handleChangeRadio}>
+          <Flex gap='2' direction='column'>
+            <Text size='2'>
+              <Flex gap='2'>
+                <RadioGroup.Item value='0' /> Chỉ xem
+              </Flex>
+            </Text>
+            <Text size='2'>
+              <Flex gap='2'>
+                <RadioGroup.Item value='1' /> Có thể chỉnh sửa
+              </Flex>
+            </Text>
+          </Flex>
+        </RadioGroup.Root>
         <div className='pb-3 pr-3 text-center '>{children}</div>
         <div className='flex justify-end'>
           <div className='flex text'>

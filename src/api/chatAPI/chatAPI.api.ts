@@ -4,6 +4,7 @@ import {
   ChatSectionResponse,
   DeleteChatSectionRequest,
   EditChatSectionNameRequest,
+  HaveNewChatSection,
   InfoChatSectionRequest,
   InfoChatSectionResponse,
   Message,
@@ -46,7 +47,13 @@ export const getInfoChatSection = async (params: InfoChatSectionRequest) => {
   const result: InfoChatSectionResponse = await axios.get('/get_info_chat_section', { params })
   return result
 }
+
 export const deleteChatSection = async (params: DeleteChatSectionRequest) => {
   const result: number = await axios.delete('/delete_chat_section', { params })
+  return result
+}
+
+export const updateHaveNewChatSection = async (params: HaveNewChatSection) => {
+  const result: number = await axios.put('/update_have_new_chatsection', params)
   return result
 }

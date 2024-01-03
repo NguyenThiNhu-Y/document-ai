@@ -8,9 +8,10 @@ import { useInView } from 'react-intersection-observer'
 import NoteItem from '@/pages/notes/components/NoteItem'
 
 export const NotePinnedList = () => {
+  const idUser = localStorage.getItem('DOCUMENT_AI_USER')
   const [pagination] = useState<NoteRequest>({
     pinned: 1,
-    iduser: 1,
+    iduser: idUser ? +idUser : 0,
     current_page: 1,
     page_size: 10,
   })

@@ -1,15 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  Button,
-  Card,
-  Dialog,
-  DialogClose,
-  Flex,
-  Heading,
-  IconButton,
-  Inset,
-  Text,
-} from '@radix-ui/themes'
+import { Button, Card, Dialog, Flex, Heading, IconButton, Text } from '@radix-ui/themes'
 import Line from '@/components/Line'
 import { GoPeople, GoPerson } from 'react-icons/go'
 import { BsCalendar4Event, BsPinAngleFill } from 'react-icons/bs'
@@ -17,12 +7,17 @@ import { BsPinAngle } from 'react-icons/bs'
 import { ForwardedRef, forwardRef, useState } from 'react'
 import { Note } from '@/api/noteAPI/noteAPI.type'
 import { formatDateTime } from '@/utils/datetime'
-import { useDeleteNote, useGetUserInNote, usePinNote } from '@/api/noteAPI/noteAPI.hooks'
+import {
+  useAllUserInNote,
+  useDeleteNote,
+  useGetUserInNote,
+  usePinNote,
+} from '@/api/noteAPI/noteAPI.hooks'
 import { PiShareFatLight } from 'react-icons/pi'
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { useAllUser } from '@/api/authAPI/auth.hooks'
 import Select, { MultiValue } from 'react-select'
 import DialogShare from '@/pages/notes/components/DialogShare'
+import { useNavigate } from 'react-router-dom'
 
 interface NoteItemProps extends Note {}
 interface Option {
@@ -35,6 +30,7 @@ const NoteItem = forwardRef(
     { idnote, title, content, created, pined }: NoteItemProps,
     ref: ForwardedRef<HTMLDivElement>
   ) => {
+    const navigate = useNavigate()
     const { mutate } = usePinNote()
     const { mutate: mutateDelete } = useDeleteNote()
 
@@ -53,7 +49,7 @@ const NoteItem = forwardRef(
     const [selectedOptions, setSelectedOptions] = useState<Option[] | null>(null)
     const [keyword, setKeyword] = useState<string>('')
 
-    const { data: dataUser } = useAllUser({ keyword: '' })
+    const { data: dataUser } = useAllUserInNote({ idnote: idnote, keyword: '' })
     let optionList: Option[] = []
     if (dataUser) {
       optionList = dataUser.map((user) => {
@@ -153,9 +149,14 @@ const NoteItem = forwardRef(
                     </IconButton>
                   </Flex>
                 </Flex>
-                <Dialog.Trigger>
-                  <ContentStyle dangerouslySetInnerHTML={{ __html: content }} />
-                </Dialog.Trigger>
+                {/* <Dialog.Trigger> */}
+                <ContentStyle
+                  dangerouslySetInnerHTML={{ __html: content }}
+                  onClick={() => {
+                    navigate('/notes/' + idnote)
+                  }}
+                />
+                {/* </Dialog.Trigger> */}
               </Flex>
               <Line />
               <Flex justify={'between'} mt={'4'}>
@@ -185,7 +186,7 @@ const NoteItem = forwardRef(
               </Flex>
             </Flex>
 
-            <Dialog.Content>
+            {/* <Dialog.Content>
               <Dialog.Title>{title}</Dialog.Title>
               <Dialog.Description>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
@@ -198,7 +199,7 @@ const NoteItem = forwardRef(
                   </Button>
                 </DialogClose>
               </Flex>
-            </Dialog.Content>
+            </Dialog.Content> */}
           </CardStyled>
         </Dialog.Root>
       </>
@@ -218,7 +219,7 @@ const CardStyled = styled(Card)(
   })
 )
 
-const ContentStyle = styled.div({
+const ContentStyle = styled.button({
   display: 'block',
   height: '300px',
   maxHeight: '6em',
@@ -226,6 +227,7 @@ const ContentStyle = styled.div({
   textOverflow: 'ellipsis',
   fontSize: 12,
   marginBottom: '10px',
+  textAlign: 'left',
 })
 
 export default NoteItem

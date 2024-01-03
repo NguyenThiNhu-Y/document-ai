@@ -3,7 +3,7 @@ import { FILE_TYPES } from '@/constants/common.enum'
 import { AiFillFileWord, AiFillFilePdf } from 'react-icons/ai'
 
 export const DEFAULT_PAGINATION = {
-  iduser: 1,
+  iduser: 0,
   page_size: PAGE_LIMIT,
   current_page: 1,
   keyword: '',

@@ -85,6 +85,18 @@ const Auth: React.FC = () => {
         iduser: data ? data?.data.user.iduser : 0,
       })
       localStorage.setItem('DOCUMENT_AI_USER', data ? '' + data?.data.user.iduser : '')
+      const userInfo = {
+        email: data ? data.data.user.email : '',
+        username: data ? data.data.user.username : '',
+        avatar: data ? data.data.user.avatar : '',
+        iduser: data ? data.data.user.iduser : '',
+      }
+
+      // Convert the userInfo object to a JSON string
+      const userInfoString = JSON.stringify(userInfo)
+
+      // Save the JSON string to localStorage
+      localStorage.setItem('DOCUMENT_AI_USER_INFO', userInfoString)
     }
     navigate('/documents')
   }

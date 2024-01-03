@@ -28,6 +28,8 @@ export interface Notify {
   content: string
   isread: number
   isclick: number
+  title_note: string
+  name_chatsection: string
 }
 
 export interface NotifyResponse extends BasePaginationResponse {
@@ -39,5 +41,9 @@ export interface NotifyIsReadRequest {
 }
 
 export interface NotifyIsClickRequest {
+  idnotify: number
+}
+
+export interface NotifyDeleteRequest {
   idnotify: number
 }
