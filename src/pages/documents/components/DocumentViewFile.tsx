@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 
 const DocumentViewFile = () => {
   const [content, setContent] = useState('')
@@ -18,9 +17,5 @@ const DocumentViewFile = () => {
 
   return <embed>{content}</embed>
 }
-
-const PStyled = styled.p({
-  textAlign: 'justify',
-})
 
 export default DocumentViewFile
