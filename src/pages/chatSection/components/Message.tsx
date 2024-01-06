@@ -6,7 +6,7 @@ import { useTheme } from '@emotion/react'
 
 interface MessageProps extends Message {}
 
-const MessageItem = ({ answer, question }: MessageProps) => {
+const MessageItem = ({ answer, question, idhistory_chat }: MessageProps) => {
   const { colors } = useTheme()
   const storedUserInfoString = localStorage.getItem('DOCUMENT_AI_USER_INFO')
   let username = ''
@@ -53,7 +53,7 @@ const MessageItem = ({ answer, question }: MessageProps) => {
               Radix
             </Heading>
             <Text as='div' size='2' color='gray'>
-              @radix_ui
+              id ==/ {idhistory_chat}
             </Text>
 
             <Text as='div' size='2' style={{ maxWidth: 300 }} mt='3'>
