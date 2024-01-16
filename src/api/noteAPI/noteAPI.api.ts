@@ -32,7 +32,7 @@ export const createNote = async (body: NewNoteRequest) => {
 }
 
 export const pinNote = async (params: PinNoteRespone) => {
-  const result: number = await axios.put('/pin_note/' + params.idnote)
+  const result: number = await axios.put('/pin_note', params)
   return result
 }
 

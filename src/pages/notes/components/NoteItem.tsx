@@ -27,16 +27,20 @@ interface Option {
 
 const NoteItem = forwardRef(
   (
-    { idnote, title, content, created, pined }: NoteItemProps,
+    { idnote, title, content, created, pined, isdeleted }: NoteItemProps,
     ref: ForwardedRef<HTMLDivElement>
   ) => {
     const navigate = useNavigate()
     const { mutate } = usePinNote()
     const { mutate: mutateDelete } = useDeleteNote()
 
+    const iduser = localStorage.getItem('DOCUMENT_AI_USER')
+      ? Number(localStorage.getItem('DOCUMENT_AI_USER'))
+      : 0
     const onPinned = () => {
       mutate({
         idnote: idnote,
+        iduser: iduser,
       })
     }
 
@@ -100,13 +104,14 @@ const NoteItem = forwardRef(
             </div>
           </DialogShare>
         )}
-        <Dialog.Root>
-          <CardStyled>
-            <Flex ref={ref} direction={'column'}>
-              <Flex direction={'column'} gap={'2'} mt={'1'}>
-                <Flex justify={'between'}>
-                  <Heading size={'2'}>{title}</Heading>
-                  <Flex gap={'2'} align={'center'} justify={'center'}>
+        {isdeleted == 1}
+        <CardStyled>
+          <Flex ref={ref} direction={'column'}>
+            <Flex direction={'column'} gap={'2'} mt={'1'}>
+              <Flex justify={'between'}>
+                <Heading size={'2'}>{title}</Heading>
+                <Flex gap={'2'} align={'center'} justify={'center'}>
+                  {isdeleted == 1 && (
                     <Dialog.Root>
                       <Dialog.Trigger>
                         <IconButton size={'1'} variant='ghost'>
@@ -130,78 +135,63 @@ const NoteItem = forwardRef(
                         </Flex>
                       </Dialog.Content>
                     </Dialog.Root>
-
-                    {pined == 0 ? (
-                      <IconButton size={'1'} variant='ghost'>
-                        <BsPinAngle size={'14'} onClick={onPinned} color={'gray'}></BsPinAngle>
-                      </IconButton>
-                    ) : (
-                      <IconButton size={'1'} variant='ghost'>
-                        <BsPinAngleFill
-                          size={'14'}
-                          onClick={onPinned}
-                          color={'black'}
-                        ></BsPinAngleFill>
-                      </IconButton>
-                    )}
-                    <IconButton size={'1'} variant='ghost' onClick={() => setIsShowDialog(true)}>
-                      <PiShareFatLight color={'gray'} />
-                    </IconButton>
-                  </Flex>
-                </Flex>
-                {/* <Dialog.Trigger> */}
-                <ContentStyle
-                  dangerouslySetInnerHTML={{ __html: content }}
-                  onClick={() => {
-                    navigate('/notes/' + idnote)
-                  }}
-                />
-                {/* </Dialog.Trigger> */}
-              </Flex>
-              <Line />
-              <Flex justify={'between'} mt={'4'}>
-                <Flex gap={'1'}>
-                  {dataUserInNote && dataUserInNote?.length > 0 ? (
-                    <>
-                      <Text size={'1'} color='gray'>
-                        {dataUserInNote?.length}
-                      </Text>
-                      <GoPeople size={'13'} color='gray' />
-                    </>
-                  ) : (
-                    <>
-                      <GoPerson size={'13'} color='gray' />
-                      <Text size={'1'} color='gray'>
-                        Chỉ bạn
-                      </Text>
-                    </>
                   )}
+
+                  {pined == 0 ? (
+                    <IconButton size={'1'} variant='ghost'>
+                      <BsPinAngle size={'14'} onClick={onPinned} color={'gray'}></BsPinAngle>
+                    </IconButton>
+                  ) : (
+                    <IconButton size={'1'} variant='ghost'>
+                      <BsPinAngleFill
+                        size={'14'}
+                        onClick={onPinned}
+                        color={'black'}
+                      ></BsPinAngleFill>
+                    </IconButton>
+                  )}
+                  <IconButton size={'1'} variant='ghost' onClick={() => setIsShowDialog(true)}>
+                    <PiShareFatLight color={'gray'} />
+                  </IconButton>
                 </Flex>
-                <Flex gap={'2'} align={'center'} justify={'center'}>
-                  <BsCalendar4Event size={'13'} color='gray' />
-                  <Text size={'1'} color='gray'>
-                    {formatDateToDDMMYYYY(formatDateTime(new Date(created)))}
-                  </Text>
-                </Flex>
+              </Flex>
+              {/* <Dialog.Trigger> */}
+              <ContentStyle
+                dangerouslySetInnerHTML={{ __html: content }}
+                onClick={() => {
+                  navigate('/notes/' + idnote)
+                }}
+              />
+              {/* </Dialog.Trigger> */}
+            </Flex>
+            <Line />
+            <Flex justify={'between'} mt={'4'}>
+              <Flex gap={'1'}>
+                {dataUserInNote && dataUserInNote?.length > 0 ? (
+                  <>
+                    <Text size={'1'} color='gray'>
+                      {dataUserInNote?.length}
+                    </Text>
+                    <GoPeople size={'13'} color='gray' />
+                  </>
+                ) : (
+                  <>
+                    <GoPerson size={'13'} color='gray' />
+                    <Text size={'1'} color='gray'>
+                      Chỉ bạn
+                    </Text>
+                  </>
+                )}
+              </Flex>
+              <Flex gap={'2'} align={'center'} justify={'center'}>
+                <BsCalendar4Event size={'13'} color='gray' />
+                <Text size={'1'} color='gray'>
+                  {formatDateToDDMMYYYY(formatDateTime(new Date(created)))}
+                </Text>
               </Flex>
             </Flex>
-
-            {/* <Dialog.Content>
-              <Dialog.Title>{title}</Dialog.Title>
-              <Dialog.Description>
-                <div dangerouslySetInnerHTML={{ __html: content }} />
-              </Dialog.Description>
-              <Inset side='x' my='5'></Inset>
-              <Flex gap='3' justify='end'>
-                <DialogClose>
-                  <Button variant='soft' color='gray'>
-                    Đóng
-                  </Button>
-                </DialogClose>
-              </Flex>
-            </Dialog.Content> */}
-          </CardStyled>
-        </Dialog.Root>
+          </Flex>
+        </CardStyled>
       </>
     )
   }

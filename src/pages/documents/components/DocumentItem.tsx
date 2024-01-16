@@ -22,11 +22,11 @@ const DocumentItem = forwardRef(
 
     const navigate = useNavigate()
 
-    const onViewMindMap = () => {
-      navigate('/mindmaps/' + iddocument)
+    const onViewSimilaryDoc = () => {
+      navigate('/similary-doc/' + iddocument)
     }
 
-    const onViewSummary = () => {
+    const onViewContent = () => {
       navigate('/summary/' + iddocument)
     }
 
@@ -48,7 +48,7 @@ const DocumentItem = forwardRef(
     function formatDateToDDMMYYYY(dateString: string) {
       const date = new Date(dateString)
       const day = date.getDate().toString().padStart(2, '0')
-      const month = (date.getMonth() + 1).toString().padStart(2, '0') // Tháng bắt đầu từ 0
+      const month = (date.getMonth() + 1).toString().padStart(2, '0')
       const year = date.getFullYear()
       const formattedDate = `${day}.${month}.${year}`
       return formattedDate
@@ -56,10 +56,23 @@ const DocumentItem = forwardRef(
     return (
       <CardStyled>
         <Flex ref={ref} direction={'column'}>
-          <Flex direction={'column'} justify={'center'} align={'center'} gap={'4'} mt={'4'}>
-            <FileIcon size={72} color={fileColor} />
-            <FileNameMask mb={'4'}>{name}</FileNameMask>
+          <FileIcon size={30} color={fileColor} />
+          <Flex
+            direction={'column'}
+            justify={'center'}
+            align={'center'}
+            gap={'4'}
+            mt={'4'}
+            style={{ height: '150px' }}
+          >
+            {/* <FileIcon size={72} color={fileColor} /> */}
+            <img
+              src='http://localhost:3000/image.png'
+              style={{ maxHeight: '100%', maxWidth: '100%' }}
+            />
           </Flex>
+          <FileNameMask>{name}</FileNameMask>
+
           <Line />
           <Flex justify={'between'} mt={'4'}>
             <Flex direction={'column'} gap={'1'}>
@@ -74,6 +87,7 @@ const DocumentItem = forwardRef(
             </Flex>
           </Flex>
         </Flex>
+
         <Dialog.Root>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
@@ -82,8 +96,12 @@ const DocumentItem = forwardRef(
               </MenuButton>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content size={'2'}>
-              <DropdownMenu.Item onClick={onViewSummary}>Tóm tắt nội dung</DropdownMenu.Item>
-              <DropdownMenu.Item onClick={onViewMindMap}>Sơ đồ tư duy</DropdownMenu.Item>
+              <DropdownMenu.Item onClick={onViewContent}>Xem nội dung</DropdownMenu.Item>
+              <DropdownMenu.Item onClick={onViewSimilaryDoc}>
+                Các tài liệu tương tự
+              </DropdownMenu.Item>
+              {/* <DropdownMenu.Item onClick={onViewSummary}>Tóm tắt nội dung</DropdownMenu.Item>
+              <DropdownMenu.Item onClick={onViewMindMap}>Sơ đồ tư duy</DropdownMenu.Item> */}
               <DropdownMenu.Item>
                 <Dialog.Trigger>
                   <Text>Xóa tài liệu</Text>
@@ -139,6 +157,7 @@ const BiTimeFiveDark = styled(BiTimeFive)((props) => ({
 }))
 
 const FileNameMask = styled(Text)({
+  height: '50px',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   display: '-webkit-box',

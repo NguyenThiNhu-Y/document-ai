@@ -25,6 +25,8 @@ export interface Message {
   created_question: string
   created_answer: string
   iduser: number
+  paragraph: string
+  source: string
 }
 
 export interface MessagesRequest extends BasePaginationRequest {
@@ -65,6 +67,7 @@ export interface InfoChatSectionRequest {
 
 export interface InfoChatSectionResponse extends ChatSection {
   document_name: number
+  document_isdeleted: number
 }
 
 export interface DeleteChatSectionRequest {

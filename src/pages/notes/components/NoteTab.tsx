@@ -2,8 +2,12 @@ import { Tabs } from '@radix-ui/themes'
 import { NoteAllList } from '@/pages/notes/components/NoteAllList'
 import { NoteSharedList } from '@/pages/notes/components/NoteSharedList'
 import { NotePinnedList } from '@/pages/notes/components/NotePinnedList'
+import { NoteRequest } from '@/api/noteAPI/noteAPI.type'
 
-export const NoteTab = () => {
+type NoteListType = {
+  pagination: NoteRequest
+}
+export const NoteTab: React.FC<NoteListType> = ({ pagination }) => {
   return (
     <div>
       <Tabs.Root defaultValue='all'>
@@ -14,15 +18,15 @@ export const NoteTab = () => {
         </Tabs.List>
 
         <Tabs.Content value='all'>
-          <NoteAllList></NoteAllList>
+          <NoteAllList pagination={pagination}></NoteAllList>
         </Tabs.Content>
 
         <Tabs.Content value='shared'>
-          <NoteSharedList></NoteSharedList>
+          <NoteSharedList pagination={pagination}></NoteSharedList>
         </Tabs.Content>
 
         <Tabs.Content value='pinned'>
-          <NotePinnedList></NotePinnedList>
+          <NotePinnedList pagination={pagination}></NotePinnedList>
         </Tabs.Content>
       </Tabs.Root>
     </div>

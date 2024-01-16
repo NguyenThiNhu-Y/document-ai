@@ -7,15 +7,21 @@ import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import NoteItem from '@/pages/notes/components/NoteItem'
 
-export const NotePinnedList = () => {
-  const idUser = localStorage.getItem('DOCUMENT_AI_USER')
-  const [pagination] = useState<NoteRequest>({
+type NotePinnedListType = {
+  pagination: NoteRequest
+}
+
+export const NotePinnedList: React.FC<NotePinnedListType> = ({ pagination }) => {
+  // const idUser = localStorage.getItem('DOCUMENT_AI_USER')
+  const [paginationPinned] = useState<NoteRequest>({
     pinned: 1,
-    iduser: idUser ? +idUser : 0,
-    current_page: 1,
-    page_size: 10,
+    iduser: pagination.iduser,
+    current_page: pagination.current_page,
+    page_size: pagination.page_size,
+    keyword: pagination.keyword,
   })
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = useNotes(pagination)
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
+    useNotes(paginationPinned)
 
   const { ref, inView } = useInView()
   const { colors } = useTheme()

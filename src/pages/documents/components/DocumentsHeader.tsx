@@ -1,7 +1,7 @@
 import { useUploadDocument } from '@/api/documentAPI/documentAPI.hooks'
 import Line from '@/components/Line'
 import { Heading, Flex, Button, Text, TextField } from '@radix-ui/themes'
-import { ChangeEvent, DragEventHandler, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { IoCloudUpload } from 'react-icons/io5'
 import { FaTimes } from 'react-icons/fa'
 import { CiSearch } from 'react-icons/ci'
@@ -59,15 +59,19 @@ const DocumentsHeader: React.FC<DocumentsHeaderType> = ({ searchKeyword, handleS
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
+      // const fileSizeLimit = 5 * 1024 * 1024 // 5MB
+
+      // // Iterate through selected files
+      // for (let i = 0; i < event.target.files.length; i++) {
+      //   const file = event.target.files[i]
+      //   if (file.size > fileSizeLimit) {
+      //     toast.error(`File ${file.name} exceeds the maximum allowed size of 5MB.`)
+      //     return
+      //   }
+      // }
       setSelectedFile(Array.from(event.target.files))
     }
   }
-  const handleFileDrop: DragEventHandler<HTMLInputElement> = () => {
-    // if (event.target.files) {
-    //   setSelectedFile(Array.from(event.target.files))
-    // }
-  }
-
   return (
     <>
       {isLoading && createPortal(<Loading />, document.body)}
@@ -126,15 +130,15 @@ const DocumentsHeader: React.FC<DocumentsHeaderType> = ({ searchKeyword, handleS
                         className='flex text-main-color items-center flex-col '
                       >
                         <IoCloudUpload fontSize={56} />
-                        <h5 className='font-semibold text-black'>Kéo thả hoặc chọn tài liệu</h5>
+                        <h5 className='font-semibold text-black'>Chọn tài liệu</h5>
                       </label>
                       <input
                         type='file'
                         id='chooseFile'
                         multiple
                         onChange={handleFileChange}
-                        onDrop={handleFileDrop}
                         className='hidden'
+                        accept='.docx, .pdf'
                       />
                     </>
                   )}

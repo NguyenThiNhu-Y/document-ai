@@ -6,7 +6,7 @@ import { useTheme } from '@emotion/react'
 
 interface MessageProps extends Message {}
 
-const MessageItem = ({ answer, question, idhistory_chat }: MessageProps) => {
+const MessageItem = ({ answer, question, paragraph, source }: MessageProps) => {
   const { colors } = useTheme()
   const storedUserInfoString = localStorage.getItem('DOCUMENT_AI_USER_INFO')
   let username = ''
@@ -19,8 +19,8 @@ const MessageItem = ({ answer, question, idhistory_chat }: MessageProps) => {
   }
 
   return (
-    <HoverCard.Root>
-      <HoverCard.Trigger>
+    <>
+      <HoverCard.Root>
         <Container size={'3'} py={'2'} className='hover:cursor-default'>
           <Flex direction={'column'} gap={'4'}>
             <Flex gap={'2'} pl={'8'}>
@@ -31,38 +31,31 @@ const MessageItem = ({ answer, question, idhistory_chat }: MessageProps) => {
                 <Avatar fallback={username.charAt(0)} variant={'soft'} />
               )}
             </Flex>
-            <Flex gap={'2'} pr={'8'}>
-              <Avatar fallback={''} radius='full' src='http://localhost:3000/bot.jpg' />
-              <ChatBotMsg>
-                {answer ? answer : <DotPulse size={20} speed={1.3} color={colors.slate1} />}
-              </ChatBotMsg>
-            </Flex>
+            <HoverCard.Trigger>
+              <Flex gap={'2'} pr={'8'}>
+                <Avatar fallback={''} radius='full' src='http://localhost:3000/bot.jpg' />
+                <ChatBotMsg>
+                  {answer ? answer : <DotPulse size={20} speed={1.3} color={colors.slate1} />}
+                </ChatBotMsg>
+              </Flex>
+            </HoverCard.Trigger>
           </Flex>
         </Container>
-      </HoverCard.Trigger>
-      <HoverCard.Content>
-        <Flex gap='4'>
-          <Avatar
-            size='3'
-            fallback='R'
-            radius='full'
-            src='https://pbs.twimg.com/profile_images/1337055608613253126/r_eiMp2H_400x400.png'
-          />
-          <Box>
-            <Heading size='3' as='h3'>
-              Radix
-            </Heading>
-            <Text as='div' size='2' color='gray'>
-              id ==/ {idhistory_chat}
-            </Text>
 
-            <Text as='div' size='2' style={{ maxWidth: 300 }} mt='3'>
-              React components, icons, and colors for building high-quality, accessible UI.
-            </Text>
-          </Box>
-        </Flex>
-      </HoverCard.Content>
-    </HoverCard.Root>
+        <HoverCard.Content style={{ maxHeight: '250px', overflowY: 'auto' }}>
+          <Flex gap='4'>
+            <Box>
+              <Heading size='3' as='h3'>
+                Nguồn: {source}
+              </Heading>
+              <Text as='div' size='2' style={{ maxWidth: 500 }} mt='3'>
+                {paragraph}
+              </Text>
+            </Box>
+          </Flex>
+        </HoverCard.Content>
+      </HoverCard.Root>
+    </>
   )
 }
 

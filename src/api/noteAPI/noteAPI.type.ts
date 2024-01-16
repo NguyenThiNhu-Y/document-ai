@@ -7,6 +7,7 @@ export interface Note {
   pined: number
   iduser: number
   created: string
+  isdeleted: number
 }
 
 export interface NoteResponse extends BasePaginationResponse {
@@ -16,6 +17,7 @@ export interface NoteResponse extends BasePaginationResponse {
 export interface NoteRequest extends BasePaginationRequest {
   iduser: number
   pinned?: number
+  keyword?: string
 }
 
 export interface NewNoteRequest {
@@ -30,6 +32,7 @@ export interface NewNoteRespone {
 
 export interface PinNoteRespone {
   idnote: number
+  iduser: number
 }
 
 export interface DeleteNoteRequest {

@@ -44,3 +44,8 @@ export const getName = async (params: IdDocumentRequest) => {
   const result: string = await axios.get('/get_name/' + params.iddocument)
   return result
 }
+
+export const getSimilaryDocument = async (params: IdDocumentRequest) => {
+  const result: string[] = await axios.get('/search_gg', { params })
+  return result
+}

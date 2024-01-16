@@ -11,6 +11,7 @@ import { Toaster } from 'react-hot-toast'
 import { AppProvider } from '@/context'
 import '@/app.css'
 import NoteViewEdit from '@/pages/notes/components/NoteViewEdit'
+import DocumentSimilary from '@/pages/documents/components/DocumentSimilary'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path='create-note' element={<NoteCreate />} />
           <Route path='notes/:idNote' element={<NoteViewEdit />} />
           <Route path='summary/:iddocument' element={<DocumentSummary />} />
+          <Route path='similary-doc/:iddocument' element={<DocumentSimilary />} />
         </Route>
         <Route path='auth' element={<Auth />} />
         <Route path='*' />

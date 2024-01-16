@@ -11,6 +11,7 @@ import {
   getDocuments,
   getName,
   getNameDocument,
+  getSimilaryDocument,
   uploadDocument,
 } from '@/api/documentAPI/documentAPI.api'
 import { PAGE_LIMIT } from '@/api/common.constants'
@@ -64,4 +65,11 @@ export const useUploadDocument = () => {
     },
   })
   return mutation
+}
+
+export const useGetSimilaryDocument = (params: IdDocumentRequest) => {
+  return useQuery({
+    queryKey: ['geSimilaryDocument', params],
+    queryFn: () => getSimilaryDocument(params),
+  })
 }

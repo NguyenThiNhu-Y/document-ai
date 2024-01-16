@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDocuments } from '@/api/documentAPI/documentAPI.hooks'
 
-import { Flex, Grid, Text } from '@radix-ui/themes'
+import { Flex, Grid } from '@radix-ui/themes'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 import DocumentItem from '@documentComponents/DocumentItem'
@@ -24,7 +24,11 @@ const DocumentList: React.FC<DocumentListType> = ({ pagination }) => {
 
   return (
     <>
-      {data?.pages[0].documents.length == 0 && <Text>Không có tài liệu nào</Text>}
+      {data?.pages[0].documents.length == 0 && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '200px' }}>
+          <img src='http://localhost:3000/e.png'></img>
+        </div>
+      )}
       <Grid columns={'3'} py={'6'} gap={'4'}>
         {data?.pages.map((page) =>
           page.documents.map((document, i) => (

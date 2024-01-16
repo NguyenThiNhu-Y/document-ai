@@ -12,8 +12,7 @@ import {
 import MemoMessageList from '@/pages/chatSection/components/MessageList'
 import InputBox from '@/pages/chatSection/components/InputBox'
 import { Message } from '@/api/chatAPI/chatAPI.types'
-import { useParams } from 'react-router-dom'
-import { useInfoChatSection } from '@/api/chatAPI/chatAPI.hooks'
+import { useNavigate, useParams } from 'react-router-dom'
 import { FaUserPlus } from 'react-icons/fa6'
 import { useEffect, useState } from 'react'
 import Select, { MultiValue } from 'react-select'
@@ -22,6 +21,7 @@ import { useNameDocument } from '@/api/documentAPI/documentAPI.hooks'
 import DialogAddUser from '@/components/Dialog/DialogAddUser'
 import { BiSolidGroup } from 'react-icons/bi'
 import { RxCross2 } from 'react-icons/rx'
+import { useInfoChatSection } from '@/api/chatAPI/chatAPI.hooks'
 interface BaseChatSectionProps {
   messages: Message[]
   onSubmit: (message: string) => void
@@ -46,22 +46,23 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
     const lastPart = urlParts[urlParts.length - 1]
     // eslint-disable-next-line react-hooks/exhaustive-deps
     iddocument = +lastPart
-  }, [])
+  }, [currentURL])
 
   const { chatID = -1 } = useParams()
   const { data } = useInfoChatSection({ idchat_section: +chatID })
 
-  if (!currentURL.includes('new-chat')) {
-    iddocument = data == null ? -1 : data.iddocument
-  }
-
   const [selectedDocId, setSelectedDocId] = useState(iddocument)
+  if (!currentURL.includes('new-chat')) {
+    iddocument = selectedDocId
+  }
   const iduser = localStorage.getItem('DOCUMENT_AI_USER')
     ? Number(localStorage.getItem('DOCUMENT_AI_USER'))
     : 0
   const { data: documents } = useNameDocument({ iduser: iduser })
+  const navigate = useNavigate()
   const handleChangeDocId = (value: string) => {
     setSelectedDocId(+value)
+    navigate('/new-chat/' + +value)
   }
 
   useEffect(() => {
@@ -127,21 +128,25 @@ const BaseChatSection = ({ messages, onSubmit, isLoading }: BaseChatSectionProps
       )}
       <Wrapper direction={'column'} align={'center'}>
         <Header>
-          <RadixSelect.Root
-            value={String(selectedDocId)}
-            onValueChange={handleChangeDocId}
-            disabled={chatID !== -1}
-          >
-            <RadixSelect.Trigger />
-            <RadixSelect.Content position='popper'>
-              <RadixSelect.Item value='-1'>Tất cả tài liệu</RadixSelect.Item>
-              {documents?.map((document) => (
-                <RadixSelect.Item value={String(document.iddocument)}>
-                  {document.name}
-                </RadixSelect.Item>
-              ))}
-            </RadixSelect.Content>
-          </RadixSelect.Root>
+          {chatID == -1 && (
+            <RadixSelect.Root
+              value={String(selectedDocId)}
+              onValueChange={handleChangeDocId}
+              disabled={chatID !== -1}
+            >
+              <RadixSelect.Trigger />
+              <RadixSelect.Content position='popper'>
+                <RadixSelect.Item value='-1'>Tất cả tài liệu</RadixSelect.Item>
+                {documents?.map((document) => (
+                  <RadixSelect.Item value={String(document.iddocument)}>
+                    {document.name}
+                  </RadixSelect.Item>
+                ))}
+              </RadixSelect.Content>
+            </RadixSelect.Root>
+          )}
+          {chatID !== -1 && <div>Tài liệu: {data?.document_name}</div>}
+
           <div
             className='absolute top-[50%] right-12 flex items-center mr-3 p-2'
             style={{

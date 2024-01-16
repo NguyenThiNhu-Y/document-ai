@@ -1,7 +1,7 @@
 import { Flex, Grid } from '@radix-ui/themes'
 import NoteItem from '@/pages/notes/components/NoteItem'
 import { Ring } from '@uiball/loaders'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { NoteRequest } from '@/api/noteAPI/noteAPI.type'
 import { useNotesShareWithYou } from '@/api/noteAPI/noteAPI.hooks'
 import { useInView } from 'react-intersection-observer'
@@ -13,13 +13,17 @@ export interface NoteItemRespon {
   content: string
 }
 
-export const NoteSharedList = () => {
-  const idUser = localStorage.getItem('DOCUMENT_AI_USER')
-  const [pagination] = useState<NoteRequest>({
-    iduser: idUser ? +idUser : 0,
-    current_page: 1,
-    page_size: 10,
-  })
+type NoteShareListType = {
+  pagination: NoteRequest
+}
+
+export const NoteSharedList: React.FC<NoteShareListType> = ({ pagination }) => {
+  // const idUser = localStorage.getItem('DOCUMENT_AI_USER')
+  // const [pagination] = useState<NoteRequest>({
+  //   iduser: idUser ? +idUser : 0,
+  //   current_page: 1,
+  //   page_size: 10,
+  // })
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
     useNotesShareWithYou(pagination)
 

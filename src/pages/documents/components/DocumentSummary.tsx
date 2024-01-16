@@ -1,4 +1,4 @@
-import { Button, Heading } from '@radix-ui/themes'
+import { Button, Container, Heading } from '@radix-ui/themes'
 import styled from '@emotion/styled'
 import { CSSProperties, useEffect, useState } from 'react'
 import Iframe from 'react-iframe'
@@ -40,25 +40,28 @@ const DocumentSummary = () => {
   }, [])
 
   return (
-    <ContainerStyled>
-      <Iframe url={url} width='100%' height='100%' position='relative' />
-      <DivSummary>
-        <Heading size='3'>NỘI DUNG TÓM TẮT</Heading>
-        <br></br>
+    // <ContainerStyled>
+    //   <Iframe url={url} width='100%' height='100%' position='relative' />
+    //   <DivSummary>
+    //     <Heading size='3'>NỘI DUNG TÓM TẮT</Heading>
+    //     <br></br>
 
-        {data?.map((item) => (
-          <div key={item.idsummary_document}>
-            <PStyled>{item.summary}</PStyled>
-            <br />
-          </div>
-        ))}
-      </DivSummary>
-      <DivButton>
-        <ButtonStyle x={coordinates.x} y={coordinates.y} display={coordinates.display}>
-          ghi chú
-        </ButtonStyle>
-      </DivButton>
-    </ContainerStyled>
+    //     {data?.map((item) => (
+    //       <div key={item.idsummary_document}>
+    //         <PStyled>{item.summary}</PStyled>
+    //         <br />
+    //       </div>
+    //     ))}
+    //   </DivSummary>
+    //   <DivButton>
+    //     <ButtonStyle x={coordinates.x} y={coordinates.y} display={coordinates.display}>
+    //       ghi chú
+    //     </ButtonStyle>
+    //   </DivButton>
+    // </ContainerStyled>
+    <div style={{ padding: '20px' }}>
+      <Iframe url={url} width='100%' height='100%' position='relative' />
+    </div>
   )
 }
 
