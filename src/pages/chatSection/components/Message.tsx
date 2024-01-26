@@ -1,12 +1,12 @@
 import { Message } from '@/api/chatAPI/chatAPI.types'
-import { Avatar, Box, Container, Flex, Heading, HoverCard, Text } from '@radix-ui/themes'
+import { Avatar, Container, Flex, HoverCard } from '@radix-ui/themes'
 import { DotPulse } from '@uiball/loaders'
 import styled from '@emotion/styled'
 import { useTheme } from '@emotion/react'
 
 interface MessageProps extends Message {}
 
-const MessageItem = ({ answer, question, paragraph, source }: MessageProps) => {
+const MessageItem = ({ answer, question, idhistory_chat }: MessageProps) => {
   const { colors } = useTheme()
   const storedUserInfoString = localStorage.getItem('DOCUMENT_AI_USER_INFO')
   let username = ''
@@ -42,17 +42,13 @@ const MessageItem = ({ answer, question, paragraph, source }: MessageProps) => {
           </Flex>
         </Container>
 
-        <HoverCard.Content style={{ maxHeight: '250px', overflowY: 'auto' }}>
-          <Flex gap='4'>
-            <Box>
-              <Heading size='3' as='h3'>
-                Nguồn: {source}
-              </Heading>
-              <Text as='div' size='2' style={{ maxWidth: 500 }} mt='3'>
-                {paragraph}
-              </Text>
-            </Box>
-          </Flex>
+        <HoverCard.Content>
+          <a
+            href={'http://localhost:8000/get_contenthighlight?idhistory_chat=' + idhistory_chat}
+            target='_blank'
+          >
+            Xem chi tiết
+          </a>
         </HoverCard.Content>
       </HoverCard.Root>
     </>

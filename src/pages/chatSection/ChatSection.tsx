@@ -13,6 +13,7 @@ import styled from '@emotion/styled'
 const ChatSection = () => {
   const isNewChatSectionMode = !useParams()?.chatID
   const [openDocument, setOpenDocument] = useState(false)
+  const [iddocument, setIddocument] = useState<number>()
 
   const handleOpenDocument = (status: boolean) => {
     setOpenDocument(status)
@@ -30,9 +31,6 @@ const ChatSection = () => {
     page_size: 10,
   })
 
-  const idDoc = data?.iddocument
-  const [iddocument, setIddocument] = useState(idDoc)
-  const url = 'http://localhost:8000/get_content_file/' + iddocument
   const handleClickDocument = (iddocument: number) => {
     setIddocument(iddocument)
     handleOpenDocument(true)
@@ -42,12 +40,14 @@ const ChatSection = () => {
     handleOpenDocument(false)
   }, [chatID])
 
+  useEffect(() => {}, [data])
+
   return isNewChatSectionMode ? (
     <NewChatSectionPage />
   ) : (
     <>
       <Flex gap={'3'}>
-        {data?.iddocument == -1 && documents && documents.pages[0].documents.length > 0 && (
+        {data?.iddocument === -1 && documents && documents.pages[0].documents.length > 0 && (
           <DropdownMenu.Root modal={false}>
             <DropdownMenu.Trigger>
               <IconButton ml={'4'} mt={'4'}>
@@ -73,7 +73,7 @@ const ChatSection = () => {
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         )}
-        {data && data.iddocument != -1 && data.document_isdeleted == 0 && (
+        {data && data.iddocument !== -1 && data.document_isdeleted === 0 && (
           <IconButton
             ml={'4'}
             mt={'4'}
@@ -84,9 +84,14 @@ const ChatSection = () => {
             <FaFileAlt />
           </IconButton>
         )}
-        {openDocument && (
+        {openDocument && data && (
           <Section>
-            <Iframe url={url} width='100%' height='100%' position='relative' />
+            <Iframe
+              url={'http://localhost:8000/get_content_file/' + (iddocument ?? data.iddocument)}
+              width='100%'
+              height='100%'
+              position='relative'
+            />
           </Section>
         )}
         <Section>

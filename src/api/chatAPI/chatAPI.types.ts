@@ -25,8 +25,6 @@ export interface Message {
   created_question: string
   created_answer: string
   iduser: number
-  paragraph: string
-  source: string
 }
 
 export interface MessagesRequest extends BasePaginationRequest {
